@@ -19,6 +19,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [email, setEmail] = React.useState<string>("")
     const [password, setPassword] = React.useState<string>("")
+    const [username, setUsername] = React.useState<string>("")
     const { toast } = useToast();
 
     async function onSubmit(event: React.SyntheticEvent) {
@@ -26,12 +27,12 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
         setIsLoading(true)
 
         if (!signup) {
-            fetch('/api/auth/login', {
+            fetch('/api/auth/register', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, username }),
             }).then(async oldRes => {
                 const res = await oldRes.json();
                 if (res.error) {
@@ -67,6 +68,23 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="grid gap-1">
+                        <Label className="sr-only" htmlFor="email">
+                            Username
+                        </Label>
+                        <Input
+                            id="username"
+                            placeholder="Xolify"
+                            type="text"
+                            autoCapitalize="none"
+                            autoComplete="email"
+                            autoCorrect="off"
+                            disabled={isLoading}
+                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
                     <div className="grid gap-1">
@@ -112,12 +130,12 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                 )}{" "}
                 Google
             </Button>
-            <p className="text-sm text-center">Don't have an account? click <Link
-                href="/signup"
+            <p className="text-sm text-center">Already have an account? click <Link
+                href="/login"
                 className="text-blue-400"
             >
                 here
-            </Link> to create one!</p>
+            </Link> to login!</p>
         </div>
     )
 }
