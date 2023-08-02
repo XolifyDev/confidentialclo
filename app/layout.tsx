@@ -1,3 +1,5 @@
+"use client";
+
 import { config } from '@/config'
 import './globals.css'
 import type { Metadata } from 'next'
@@ -6,10 +8,7 @@ import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 import { useRouter } from 'next/navigation'
 import { Toaster } from '@/components/ui/toaster';
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from 'next/headers';
-import { Database } from '@/lib/database.types';
-import { supabase } from '@/lib/supabase'
+import { SessionProvider } from 'next-auth/react';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
   description: config.siteInfo.description,
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -35,8 +34,11 @@ export default async function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <body className={inter.className}>
-        <Toaster />
-        {children}
+        <SessionProvider>
+          <Toaster />
+          <Navbar />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   )

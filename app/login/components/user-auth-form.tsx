@@ -10,7 +10,9 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useToast } from "@/components/ui/use-toast"
 import useGlobalStore from "@/store/useGlobalStore"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+import { prisma } from "@/lib/db"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     signup: boolean;
@@ -25,39 +27,73 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
     const router = useRouter();
 
     async function onSubmit(event: React.SyntheticEvent) {
+        "use server";
+        
         event.preventDefault()
         setIsLoading(true)
 
         if (!signup) {
-            fetch('/api/auth/login', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            }).then(async oldRes => {
-                const res = await oldRes.json();
-                if (res.error) {
-                    setIsLoading(false);
+            // fetch('/api/auth/login', {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({ email, password }),
+            // }).then(async oldRes => {
+            //     const res = await oldRes.json();
+            //     if (res.error) {
+            //         setIsLoading(false);
+            //         return toast({
+            //             description: res.error.message
+            //         })
+            //     }
+            //     else {
+            //         setUser({
+            //             email: res.user.email,
+            //             id: res.user.id,
+            //             name: res.user.name,
+            //             phone_number: res.user.phone_number,
+            //             email_subscribe: res.user.email_subscribe,
+            //             inserted_at: res.user.inserted_at,
+            //             updated_at: res.user.updated_at
+            //         });
+            //         toast({
+            //             description: "Successfully logged in! 😁",
+            //             color: "green"
+            //         });
+            //         return router.push("/");
+            //     }
+            // })
+            signIn('credentials', {
+                email,
+                password,
+                redirect: false
+            }).then(async (callback) => {
+                if (callback?.error) {
                     return toast({
-                        description: res.error.message
+                        description: callback.error
                     })
                 }
-                else {
+                if (callback?.ok && !callback?.error) {
+                    const newData = await prisma.user.findUnique({
+                        where: {
+                            email
+                        }
+                    });
                     setUser({
-                        email: res.user.email,
-                        id: res.user.id,
-                        name: res.user.name,
-                        phone_number: res.user.phone_number,
-                        email_subscribe: res.user.email_subscribe,
-                        inserted_at: res.user.inserted_at,
-                        updated_at: res.user.updated_at
+                        email: newData?.email,
+                        email_subscribe: newData?.email_subscribed,
+                        id: newData?.id,
+                        name: newData?.name,
+                        phone_number: newData?.phone_number,
                     });
                     toast({
-                        description: "Successfully logged in! 😁",
-                        color: "green"
+                        description: "Successfully logged in! 😁"
                     });
-                    return router.push("/");
+                    toast({
+                        description: `Welcome back ${newData?.name}!`
+                    })
+                    redirect('/')
                 }
             })
         }

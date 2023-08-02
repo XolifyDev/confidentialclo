@@ -7,14 +7,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect, useMemo } from 'react'
 import { Button } from './ui/button';
-import { useSession } from "@supabase/auth-helpers-react";
+import { useSession } from 'next-auth/react';
 
-export default function Navbar({ session }: { session: Session }) {
+export default function Navbar() {
     const [clientWindowHeight, setClientWindowHeight] = useState<number | string>("");
-    // const session = useSession();
-    
-    console.log(session)
+    const session = useSession();
 
+    console.log(session)
+    
     // const [backgroundTransparacy, setBackgroundTransparacy] = useState<number>(100);
     const [showScrollClass, setShowScrollClass] = useState<boolean>(false);
 
@@ -41,7 +41,7 @@ export default function Navbar({ session }: { session: Session }) {
                 <button className="block border-0 bg-transparent px-2.5 py-2 text-neutral-500 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden" type="button" data-te-collapse-init="" data-te-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="[&amp;>svg]:w-7">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7">
-                            <path fill-rule="evenodd" d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clip-rule="evenodd"></path>
+                            <path fillRule="evenodd" d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clipRule="evenodd"></path>
                         </svg>
                     </span>
                 </button>
@@ -57,7 +57,7 @@ export default function Navbar({ session }: { session: Session }) {
                     </a>
                 </div>
 
-                {session ? (
+                {session.status !== "unauthenticated" ? (
                     <div className="relative flex items-center">
                         <a className="mr-4 text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&amp;.active]:text-black/90 dark:[&amp;.active]:text-neutral-400" href="#">
                             <span className="[&amp;>svg]:w-5">

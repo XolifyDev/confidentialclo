@@ -24,12 +24,14 @@ model User {
   name  String?
   email String? @unique
   image String?
-
+  phone_number String?
+  email_subscribed Boolean @default(true)
   hashedPassword String?
   banned         Boolean?
 
   accounts Account[]
   sessions Session[]
+  orders Orders[]
 }
 
 model Account {
@@ -53,13 +55,30 @@ model Account {
 
 model Products {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String
-  productName String
-  productDesc String
-  productPrice String
-  productImage String
-  productCopyRight String
-  productImages String
+  name String
+  description String
+  sizes String[]
+  gallery String[]
+  mainImage String
+  price String
   url String
-  productFile String
+
+  orderProducts OrderProducts[]
+}
+
+model OrderProducts {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  orderId String @db.ObjectId
+  productId String @db.ObjectId
+
+  product Products @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Orders {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  inserted_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  userId String @db.ObjectId
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

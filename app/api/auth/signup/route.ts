@@ -4,6 +4,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimiterMiddleware } from '../../../../lib/rate-limiter';
 import { Readable } from "stream";
+import { prisma } from "@/lib/db";
+import bcrypt from "bcrypt";
 
 export const config = {
     api: {
@@ -43,17 +45,9 @@ export async function POST(req: NextApiRequest) {
         })
     }
 
-    const { data: searchEmailData, error: searchEmailError } = await supabase.from("users").select("*").eq("email", email);
+    const searchEmailData = await prisma.user.findUnique({ where: { email } });
 
-    if (searchEmailError) {
-        return NextResponse.json({
-            error: {
-                message: searchEmailError.message
-            }
-        })
-    }
-
-    if (searchEmailData[0]) {
+    if (searchEmailData) {
         return NextResponse.json({
             error: {
                 message: "Email already in use."
@@ -61,17 +55,13 @@ export async function POST(req: NextApiRequest) {
         })
     }
 
-    const { data: searchUsernameData, error: searchUsernameError } = await supabase.from("users").select("*").eq("name", username);
+    const searchUsernameData = await prisma.user.findFirst({
+        where: {
+            name: username
+        }
+    })
 
-    if (searchUsernameError) {
-        return NextResponse.json({
-            error: {
-                message: searchUsernameError.message
-            }
-        })
-    }
-
-    if (searchUsernameData[0]) {
+    if (searchUsernameData) {
         return NextResponse.json({
             error: {
                 message: "Username already in use."
@@ -79,36 +69,17 @@ export async function POST(req: NextApiRequest) {
         })
     }
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: {
-                username
-            },
-            emailRedirectTo: `${requestUrl}/auth/callback`
+
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const user = await prisma.user.create({
+        data: {
+            email,
+            name: username,
+            hashedPassword
         }
     })
 
-    if (signUpError) {
-        return NextResponse.json({
-            error: {
-                message: signUpError.message
-            }
-        })
-    }
-
-    const { data: newUserData, error: newUserError } = await supabase.from("users").insert({ id: signUpData.user?.id, email: signUpData.user?.email, name: username, });
-
-    if (!newUserData || newUserError) {
-        return NextResponse.json({
-            error: {
-                message: "Looks like something went wrong. Please try again!"
-            }
-        })
-    }
-    console.log(newUserData)
-    return NextResponse.redirect(requestUrl.origin, {
-        status: 301,
-    })
+    return NextResponse.json({user});
 }
