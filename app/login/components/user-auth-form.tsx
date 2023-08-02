@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useToast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
+import useGlobalStore from "@/store/useGlobalStore"
+import { useRouter } from "next/navigation"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     signup: boolean;
@@ -20,6 +21,8 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
     const [email, setEmail] = React.useState<string>("")
     const [password, setPassword] = React.useState<string>("")
     const { toast } = useToast();
+    const { setUser } = useGlobalStore();
+    const router = useRouter();
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
@@ -39,6 +42,22 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                     return toast({
                         description: res.error.message
                     })
+                }
+                else {
+                    setUser({
+                        email: res.user.email,
+                        id: res.user.id,
+                        name: res.user.name,
+                        phone_number: res.user.phone_number,
+                        email_subscribe: res.user.email_subscribe,
+                        inserted_at: res.user.inserted_at,
+                        updated_at: res.user.updated_at
+                    });
+                    toast({
+                        description: "Successfully logged in! 😁",
+                        color: "green"
+                    });
+                    return router.push("/");
                 }
             })
         }

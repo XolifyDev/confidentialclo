@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useToast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
+import useGlobalStore from "@/store/useGlobalStore"
+import { useRouter } from "next/navigation"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     signup: boolean;
@@ -21,28 +22,45 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
     const [password, setPassword] = React.useState<string>("")
     const [username, setUsername] = React.useState<string>("")
     const { toast } = useToast();
+    const { setUser } = useGlobalStore();
+    const router = useRouter();
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
-
-        if (!signup) {
-            fetch('/api/auth/register', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password, username }),
-            }).then(async oldRes => {
-                const res = await oldRes.json();
-                if (res.error) {
-                    setIsLoading(false);
-                    return toast({
-                        description: res.error.message
-                    })
-                }
-            })
-        }
+        fetch('/api/auth/signup', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password, username }),
+        }).then(async oldRes => {
+            const res = await oldRes.json();
+            console.log(res);
+            if (res.error) {
+                setIsLoading(false);
+                return toast({
+                    description: res.error.message,
+                    variant: "destructive"
+                })
+            } else {
+                // setIsLoading(false);
+                setUser({
+                    email: res.user.email,
+                    id: res.user.id,
+                    name: res.user.name,
+                    phone_number: res.user.phone_number,
+                    email_subscribe: res.user.email_subscribe,
+                    inserted_at: res.user.inserted_at,
+                    updated_at: res.user.updated_at
+                });
+                toast({
+                    description: "Successfully signed up! 😁",
+                    color: "green"
+                });
+                return router.push("/");
+            }
+        })
 
         setTimeout(() => {
             setIsLoading(false)

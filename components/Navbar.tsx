@@ -7,21 +7,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect, useMemo } from 'react'
 import { Button } from './ui/button';
+import { useSession } from "@supabase/auth-helpers-react";
 
-export default function Navbar() {
+export default function Navbar({ session }: { session: Session }) {
     const [clientWindowHeight, setClientWindowHeight] = useState<number | string>("");
-    const [session, setSession] = useState<Session | null>(null);
+    // const session = useSession();
+    
+    console.log(session)
 
-    useEffect(() => {
-        (async () => {
-            const oldSession = await supabase.auth.getSession();
-
-            setSession(oldSession.data.session || null);
-        })
-    }, [])
-
-
-    const [backgroundTransparacy, setBackgroundTransparacy] = useState<number>(100);
+    // const [backgroundTransparacy, setBackgroundTransparacy] = useState<number>(100);
     const [showScrollClass, setShowScrollClass] = useState<boolean>(false);
 
     useEffect(() => {

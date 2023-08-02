@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 import '../styles/index.css'
 import Head from 'next/head'
 import { config } from '@/config'
+import { SessionContextProvider } from '@supabase/auth-helpers-react'
+import { supabase } from '@/lib/supabase'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter()

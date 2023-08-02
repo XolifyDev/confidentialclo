@@ -38,9 +38,10 @@ export async function POST(req: NextApiRequest) {
 
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
-    })
+        password,
+    });
 
+    
     if (error) {
         return NextResponse.json({
             error: {
@@ -48,4 +49,9 @@ export async function POST(req: NextApiRequest) {
             }
         })
     }
+    
+    const { data: userData } = await supabase.from("users").select("*").eq("id", data.user.id).single();
+    return NextResponse.json({
+        user: userData
+    })
 }
