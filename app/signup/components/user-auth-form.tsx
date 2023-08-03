@@ -20,7 +20,9 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [email, setEmail] = React.useState<string>("")
     const [password, setPassword] = React.useState<string>("")
-    const [username, setUsername] = React.useState<string>("")
+    const [username, setUsername] = React.useState<string>("");
+    const [firstName, setFirstName] = React.useState<string>("");
+    const [lastName, setLastName] = React.useState<string>("");
     const { toast } = useToast();
     const { setUser } = useGlobalStore();
     const router = useRouter();
@@ -33,7 +35,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email, password, username }),
+            body: JSON.stringify({ email, password, firstName, lastName }),
         }).then(async oldRes => {
             const res = await oldRes.json();
             console.log(res);
@@ -48,23 +50,19 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                 setUser({
                     email: res.user.email,
                     id: res.user.id,
-                    name: res.user.name,
+                    firstName: res.user.firstName,
+                    lastName: res.user.lastName,
                     phone_number: res.user.phone_number,
-                    email_subscribe: res.user.email_subscribe,
-                    inserted_at: res.user.inserted_at,
-                    updated_at: res.user.updated_at
+                    email_subscribed: res.user.email_subscribed,
                 });
                 toast({
                     description: "Successfully signed up! 😁",
                     color: "green"
                 });
+                setIsLoading(false)
                 return router.push("/");
             }
         })
-
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
     }
 
     return (
@@ -89,20 +87,37 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                         />
                     </div>
                     <div className="grid gap-1">
-                        <Label className="sr-only" htmlFor="email">
-                            Username
+                        <Label className="sr-only" htmlFor="firstName">
+                            First Name
                         </Label>
                         <Input
-                            id="username"
-                            placeholder="Xolify"
+                            id="firstName"
+                            placeholder="John"
                             type="text"
-                            autoCapitalize="none"
-                            autoComplete="email"
+                            autoCapitalize="yes"
+                            autoComplete="firstName"
                             autoCorrect="off"
                             disabled={isLoading}
                             required
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                        />
+                    </div>
+                    <div className="grid gap-1">
+                        <Label className="sr-only" htmlFor="lastName">
+                            Last Name
+                        </Label>
+                        <Input
+                            id="lastName"
+                            placeholder="Doe"
+                            type="text"
+                            autoCapitalize="yes"
+                            autoComplete="firstName"
+                            autoCorrect="off"
+                            disabled={isLoading}
+                            required
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
                         />
                     </div>
                     <div className="grid gap-1">

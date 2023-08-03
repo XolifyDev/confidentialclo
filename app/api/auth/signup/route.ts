@@ -34,9 +34,9 @@ export async function POST(req: NextApiRequest) {
     }
     const rawData = await getRawBody(req.body);
     const body = JSON.parse(Buffer.from(rawData).toString('utf8'))
-    const { email, password, username } = body;
+    const { email, password, firstName, lastName } = body;
     console.log(body)
-    if (!email || !username || !password) return NextResponse.json({ error: { message: "All inputs msut be filled out." } })
+    if (!email || !firstName || !lastName || !password) return NextResponse.json({ error: { message: "All inputs msut be filled out." } })
     if (password.length < 6) {
         return NextResponse.json({
             error: {
@@ -55,28 +55,13 @@ export async function POST(req: NextApiRequest) {
         })
     }
 
-    const searchUsernameData = await prisma.user.findFirst({
-        where: {
-            name: username
-        }
-    })
-
-    if (searchUsernameData) {
-        return NextResponse.json({
-            error: {
-                message: "Username already in use."
-            }
-        })
-    }
-
-
-
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
         data: {
             email,
-            name: username,
+            firstName,
+            lastName,
             hashedPassword
         }
     })

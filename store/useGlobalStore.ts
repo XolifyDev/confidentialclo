@@ -1,4 +1,5 @@
 import { Database } from "@/lib/database.types";
+import { User } from "@prisma/client";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -12,7 +13,7 @@ export interface IApp {
     isLoading: boolean;
 }
 
-export type IDatabaseUser = Database['public']['Tables']['users']['Row'];
+export type IDatabaseUser = User;
 
 interface IGlobalStateValues {
     app: IApp;
@@ -33,12 +34,15 @@ export const initialState: IGlobalStateValues = {
     },
     user: {
         email: "",
-        email_subscribe: false,
+        email_subscribed: false,
         id: "",
-        inserted_at: "",
-        name: "",
         phone_number: "",
-        updated_at: ""
+        firstName: "",
+        banned: false,
+        hashedPassword: "",
+        image: null,
+        lastName: "",
+        isAdmin: false
     },
     cart: []
 };

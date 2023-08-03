@@ -13,6 +13,7 @@ import useGlobalStore from "@/store/useGlobalStore"
 import { redirect, useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { prisma } from "@/lib/db"
+import { findUserByEmail } from "@/lib/actions/dbActions"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     signup: boolean;
@@ -27,8 +28,6 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
     const router = useRouter();
 
     async function onSubmit(event: React.SyntheticEvent) {
-        "use server";
-        
         event.preventDefault()
         setIsLoading(true)
 
@@ -75,32 +74,31 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                     })
                 }
                 if (callback?.ok && !callback?.error) {
-                    const newData = await prisma.user.findUnique({
-                        where: {
-                            email
-                        }
-                    });
+                    const newData = await findUserByEmail({ email });
                     setUser({
                         email: newData?.email,
-                        email_subscribe: newData?.email_subscribed,
+                        email_subscribed: newData?.email_subscribed,
                         id: newData?.id,
-                        name: newData?.name,
+                        firstName: newData?.firstName,
+                        lastName: newData?.lastName,
                         phone_number: newData?.phone_number,
                     });
                     toast({
                         description: "Successfully logged in! 😁"
                     });
                     toast({
-                        description: `Welcome back ${newData?.name}!`
+                        description: `Welcome back ${newData?.firstName}!`
                     })
-                    redirect('/')
+                    // setIsLoading(false)
+                    router.push('/')
                 }
             })
+            .finally(() => setIsLoading(false));
         }
 
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
+        // setTimeout(() => {
+        //     setIsLoading(false)
+        // }, 3000)
     }
 
     return (

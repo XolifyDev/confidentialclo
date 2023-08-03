@@ -8,13 +8,26 @@ import Link from 'next/link';
 import React, { useState, useEffect, useMemo } from 'react'
 import { Button } from './ui/button';
 import { useSession } from 'next-auth/react';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { User } from '@prisma/client';
+import { findUserByEmail } from '@/lib/actions/dbActions';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 export default function Navbar() {
     const [clientWindowHeight, setClientWindowHeight] = useState<number | string>("");
     const session = useSession();
+    const [userData, setUserData] = useState<User | null>(null);
 
-    console.log(session)
-    
+    useEffect(() => {
+        const getUserData = async () => {
+            if (!session.data?.user) return;
+            const user = await findUserByEmail({ email: session.data.user.email });
+
+            setUserData(user);
+        }
+        getUserData();
+    }, [session])
+
     // const [backgroundTransparacy, setBackgroundTransparacy] = useState<number>(100);
     const [showScrollClass, setShowScrollClass] = useState<boolean>(false);
 
@@ -67,9 +80,55 @@ export default function Navbar() {
                             </span>
                         </a>
                         <div className="relative" data-te-dropdown-ref="">
-                            <a className="hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none" href="#" id="dropdownMenuButton2" role="button" data-te-dropdown-toggle-ref="" aria-expanded="false">
-                                <Image src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg" width={25} height={25} className="rounded-full h-[25px] w-[25px]" alt="" loading="lazy" />
-                            </a>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <div className="cursor-pointer hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none">
+                                        <Avatar>
+                                            <AvatarImage src={userData?.image!} alt={userData?.firstName!} />
+                                            <AvatarFallback>{userData?.firstName && userData?.firstName.charAt(0) || ""}{userData?.lastName && userData?.lastName.charAt(0) || ""}</AvatarFallback>
+                                        </Avatar>
+                                    </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56" align="end" forceMount>
+                                    <DropdownMenuLabel className="font-normal">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none">{userData?.firstName && userData?.firstName + ` ${userData?.lastName}`}</p>
+                                            <p className="text-xs leading-none text-muted-foreground">
+                                                {userData?.email}
+                                            </p>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuGroup>
+                                        <a href="/profile">
+                                            <DropdownMenuItem className='cursor-pointer'>
+                                                Profile
+                                            </DropdownMenuItem>
+                                        </a>
+                                        <a href="/orders">
+                                            <DropdownMenuItem className='cursor-pointer'>
+                                                Orders
+                                            </DropdownMenuItem>
+                                        </a>
+                                        <a href="/settings">
+                                            <DropdownMenuItem className='cursor-pointer'>
+                                                Settings
+                                            </DropdownMenuItem>
+                                        </a>
+                                        {userData?.isAdmin && (
+                                            <a href="/admin">
+                                                <DropdownMenuItem className='cursor-pointer'>
+                                                    Admin
+                                                </DropdownMenuItem>
+                                            </a>
+                                        )}
+                                    </DropdownMenuGroup>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem className='cursor-pointer'>
+                                        Log out
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                             <ul className="absolute left-auto right-0 z-[1000] float-left m-0 mt-1 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&amp;[data-te-dropdown-show]]:block" aria-labelledby="dropdownMenuButton2" data-te-dropdown-menu-ref="">
                                 <li>
                                     <a className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30" href="#" data-te-dropdown-item-ref="">Action</a>
@@ -85,8 +144,8 @@ export default function Navbar() {
                     </div>
                 ) : (
                     <div>
-                        <Link href={'/login'} 
-                            // className={`py-1 px-4  ${showScrollClass ? "bg-slate-700 text-white" : "bg-white text-black"} transition-colors rounded`}
+                        <Link href={'/login'}
+                        // className={`py-1 px-4  ${showScrollClass ? "bg-slate-700 text-white" : "bg-white text-black"} transition-colors rounded`}
                         >
                             <Button>
                                 Login
