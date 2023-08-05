@@ -39,67 +39,31 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Icons } from "@/components/icons"
+import { useToast } from "@/components/ui/use-toast"
+import { getProducts } from "@/lib/actions/dbActions"
+import { Products } from "@prisma/client"
 
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        amount: 316,
-        status: "success",
-        email: "ken99@yahoo.com",
-    },
-    {
-        id: "3u1reuv4",
-        amount: 242,
-        status: "success",
-        email: "Abe45@gmail.com",
-    },
-    {
-        id: "derv1ws0",
-        amount: 837,
-        status: "processing",
-        email: "Monserrat44@gmail.com",
-    },
-    {
-        id: "5kma53ae",
-        amount: 874,
-        status: "success",
-        email: "Silas22@gmail.com",
-    },
-    {
-        id: "bhqecj4p",
-        amount: 721,
-        status: "failed",
-        email: "carmella@hotmail.com",
-    },
-]
-
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
-
-export const columns: ColumnDef<Payment>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected()}
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
+export const columns = [
+    // {
+    //     id: "select",
+    //     header: ({ table }) => (
+    //         <Checkbox
+    //             checked={table.getIsAllPageRowsSelected()}
+    //             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //             aria-label="Select all"
+    //         />
+    //     ),
+    //     cell: ({ row }) => (
+    //         <Checkbox
+    //             checked={row.getIsSelected()}
+    //             onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //             aria-label="Select row"
+    //         />
+    //     ),
+    //     enableSorting: false,
+    //     enableHiding: false,
+    // },
     {
         accessorKey: "Name",
         header: ({ column }) => {
@@ -113,7 +77,7 @@ export const columns: ColumnDef<Payment>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("Name")}</div>,
+        cell: ({ row }) => <div className="">{row.original.name}</div>,
     },
     {
         accessorKey: "Description",
@@ -127,7 +91,7 @@ export const columns: ColumnDef<Payment>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("Description")}</div>,
+        cell: ({ row }) => <div className="">{row.original.description}</div>,
     },
     {
         accessorKey: "Price",
@@ -141,7 +105,7 @@ export const columns: ColumnDef<Payment>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="lowercase">{row.getValue("Price")}</div>,
+        cell: ({ row }) => {  return <div className="lowercase ml-5">${row.original.price}</div>},
     },
     //   {
     //     id: "actions",
@@ -177,7 +141,26 @@ export const columns: ColumnDef<Payment>[] = [
 export function ProductsTable() {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [showDialog, setShowDialog] = React.useState<boolean>(false);
-    const [imgsSrc, setImgsSrc] = React.useState<Array>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [imgsSrc, setImgsSrc] = React.useState<any>("");
+    const [name, setProductName] = React.useState<string>("");
+    const [description, setDescription] = React.useState<string>("");
+    const [price, setPrice] = React.useState<string>("");
+    const [url, setUrl] = React.useState<string>("");
+    const [sizes, setSizes] = React.useState<string>("");
+    const [mainImage, setProductMainImage] = React.useState<string>("");
+    const [images, setImages] = React.useState<string>("");
+    const { toast } = useToast();
+    const [data, setData] = React.useState<Products[]>([]);
+
+    React.useEffect(() => {
+        const getData = async () => {
+            setData(await getProducts());
+        };
+
+        getData();
+    }, [])
+
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
@@ -203,6 +186,41 @@ export function ProductsTable() {
             rowSelection,
         },
     })
+
+    const fileOnChange = (changeEvent: any) => {
+        for (let file of changeEvent.target.files) {
+            setImgsSrc(file)
+
+        }
+    }
+
+    const onSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        setLoading(true);
+
+        fetch('/api/products/create', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, description, url, sizes, mainImage: imgsSrc, images, price }) 
+        }).then(async oldRes => await oldRes.json()).then(async res => {
+            if (res.error) {
+                setLoading(false);
+                return toast({
+                    description: res.error.message,
+                    variant: "destructive"
+                })
+            } else {
+                setLoading(false)
+                toast({
+                    description: `Product ${res.product.name} was created!`,
+                    variant: "default"
+                });
+
+            }
+        })
+    }
 
     return (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -330,35 +348,63 @@ export function ProductsTable() {
                         Add a new product to your store!
                     </DialogDescription>
                 </DialogHeader>
-                <div>
-                    <div className="space-y-4 py-2 pb-4">
-                        <div className="flex flex-row space-x-2">
+                <form onSubmit={onSubmit} encType="multipart/form-data">
+                    <div>
+                        <div className="space-y-4 py-2 pb-4">
+                            <div className="flex flex-row space-x-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Product name</Label>
+                                    <Input
+                                        disabled={loading}
+                                        required
+                                        id="name" value={name} onChange={(e) => setProductName(e.target.value)} placeholder="Baggy T-Shirt" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="price">Product price</Label>
+                                    <Input
+                                        disabled={loading}
+                                        required
+                                        id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="100" />
+                                </div>
+                            </div>
                             <div className="space-y-2">
-                                <Label htmlFor="name">Product name</Label>
-                                <Input id="name" placeholder="Baggy T-Shirt" />
+                                <Label htmlFor="description">Product Description</Label>
+                                <Textarea
+                                    disabled={loading}
+                                    required
+                                    id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="A Baggy T-Shirt for your everyday needs." />
                             </div>
-                             <div className="space-y-2">
-                                <Label htmlFor="price">Product price</Label>
-                                <Input id="price" placeholder="Acme Inc." />
+                            <div className="space-y-2">
+                                <Label htmlFor="url">Product Site URL (/store/baggy-tshirt)</Label>
+                                <Input id="url"
+                                    disabled={loading}
+                                    required
+                                    value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Acme Inc." />
                             </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Product Description</Label>
-                            <Textarea id="description" placeholder="A Baggy T-Shirt for your everyday needs." />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="url">Product Site URL (/store/baggy-tshirt)</Label>
-                            <Input id="url" placeholder="Acme Inc." />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Product sizes (Seperate with commas. ",")</Label>
-                            <Input id="name" placeholder="xl, lg, sm" />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="image">Product Image</Label>
-                            <Input id="image" multiple type="file" />
-                        </div>
-                        {/* <div className="space-y-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Product sizes (Seperate with commas. ",")</Label>
+                                <Input id="name"
+                                    disabled={loading}
+                                    required
+                                    value={sizes} onChange={(e) => setSizes(e.target.value)} placeholder="xl, lg, sm" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="image">Main Product Image</Label>
+                                <Input id="image"
+                                    disabled={loading}
+                                    required
+                                    onChange={fileOnChange} type="file" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="images">Product Images (Seperate with commas)</Label>
+                                <Textarea id="images"
+                                    disabled={loading}
+                                    required
+                                    value={images} onChange={(e) => setImages(e.target.value)} placeholder="https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
+                            https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
+                            https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png" />
+                            </div>
+                            {/* <div className="space-y-2">
                             <Label htmlFor="plan">Subscription plan</Label>
                             <Select>
                                 <SelectTrigger>
@@ -380,14 +426,26 @@ export function ProductsTable() {
                                 </SelectContent>
                             </Select>
                         </div> */}
+                        </div>
                     </div>
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowDialog(false)}>
-                        Cancel
-                    </Button>
-                    <Button type="submit">Continue</Button>
-                </DialogFooter>
+                    <DialogFooter>
+                        <Button
+                            disabled={loading}
+                            variant="outline" onClick={() => setShowDialog(false)}>
+                            {loading && (
+                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            )}
+                            Cancel
+                        </Button>
+                        <Button
+                            disabled={loading}
+                            type="submit">
+                            {loading && (
+                                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            )}
+                            Create</Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     )

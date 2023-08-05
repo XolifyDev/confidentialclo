@@ -9,3 +9,7 @@ export const findUserByEmail = async ({ email }: { email: string }) => {
         }
     });
 }
+
+export const getProducts = async () => {
+    return await prisma.products.findMany();
+}

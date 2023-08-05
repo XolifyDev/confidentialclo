@@ -11,7 +11,7 @@ const data = [
     name: "Feb",
     total: Math.floor(Math.random() * 5000) + 1000,
   },
-  {
+  { 
     name: "Mar",
     total: Math.floor(Math.random() * 5000) + 1000,
   },

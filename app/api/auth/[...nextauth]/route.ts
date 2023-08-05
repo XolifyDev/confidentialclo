@@ -1,16 +1,14 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import { config } from "@/config";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 const prisma = new PrismaClient();
 
-const handler = NextAuth({
-    // @ts-ignore
+export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
     providers: [
         // GoogleProvider({
@@ -73,7 +71,9 @@ const handler = NextAuth({
         signIn: "/login"
     },
     secret: "awdawd12312asdawd"
-});
+}
+
+const handler = NextAuth(authOptions);
 
 // export default handler;
 

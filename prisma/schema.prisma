@@ -91,3 +91,9 @@ model SiteSettings {
   totalRevenue String @default("0")
   totalOrders String @default("0")
 }
+
+model Revenue {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  date String
+  amount String
+}
