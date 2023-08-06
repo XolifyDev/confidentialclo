@@ -90,6 +90,8 @@ model SiteSettings {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   totalRevenue String @default("0")
   totalOrders String @default("0")
+  middleImage String
+  mainHomeImage String
 }
 
 model Revenue {

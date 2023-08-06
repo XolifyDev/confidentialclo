@@ -56,8 +56,8 @@ export async function POST(req: NextApiRequest) {
     if (urlSearch) return NextResponse.json({ error: { message: "Product Url is already in use" } });
     // console.log(images.split(","), sizes.split(","));
     let imageId = uniqueId();
-    const mainImageUpload = await supabase.storage.from("images").upload(`/products/${imageId}.png`, mainImage);
-    const mainImageSrc = await supabase.storage.from("images").getPublicUrl(`/products/${imageId}.png`);
+    const mainImageUpload = await supabase.storage.from("images").upload(`products/${imageId}.png`, mainImage);
+    const mainImageSrc = await supabase.storage.from("images").getPublicUrl(`products/${imageId}.png`);
     const newProduct = await prisma.products.create({
         data: {
             description,

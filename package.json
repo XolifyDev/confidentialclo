@@ -38,6 +38,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "lru-cache": "^10.0.0",
     "lucide-react": "^0.263.1",

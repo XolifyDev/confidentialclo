@@ -107,6 +107,22 @@ export const columns = [
         },
         cell: ({ row }) => {  return <div className="lowercase ml-5">${row.original.price}</div>},
     },
+    {
+        accessorKey: "actionButtons",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    
+                </Button>
+            )
+        },
+        cell: ({ row }) => {  return <div className="lowercase ml-5">
+            
+        </div>},
+    },
     //   {
     //     id: "actions",
     //     enableHiding: false,
@@ -317,10 +333,10 @@ export function ProductsTable() {
                     </Table>
                 </div>
                 <div className="flex items-center justify-end space-x-2 py-4">
-                    <div className="flex-1 text-sm text-muted-foreground">
+                    {/* <div className="flex-1 text-sm text-muted-foreground">
                         {table.getFilteredSelectedRowModel().rows.length} of{" "}
                         {table.getFilteredRowModel().rows.length} row(s) selected.
-                    </div>
+                    </div> */}
                     <div className="space-x-2">
                         <Button
                             variant="outline"

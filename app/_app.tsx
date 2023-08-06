@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { config } from '@/config'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { supabase } from '@/lib/supabase'
+import { AuthContextProvider } from '@/lib/contexts/AuthContext'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter()
@@ -20,7 +21,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
                 <link rel="manifest" href="/site.webmanifest" />
             </Head>
-            <Component {...pageProps} />
+            <AuthContextProvider>
+                <Component {...pageProps} />
+            </AuthContextProvider>
         </>
     )
 }
