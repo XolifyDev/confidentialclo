@@ -6,7 +6,7 @@ export default class MyDocument extends Document {
     render() {
         const { basePath } = useRouter()
         return (
-            <Html lang="en">
+            <Html lang="en" suppressHydrationWarning={true} suppressContentEditableWarning={true}>
                 {/* <Head>
                     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
                     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

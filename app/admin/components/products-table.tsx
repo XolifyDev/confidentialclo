@@ -13,7 +13,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, PlusCircleIcon } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, PlusCircleIcon, Trash } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -24,6 +24,7 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -41,121 +42,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Icons } from "@/components/icons"
 import { useToast } from "@/components/ui/use-toast"
-import { getProducts } from "@/lib/actions/dbActions"
-import { Products } from "@prisma/client"
-
-export const columns = [
-    // {
-    //     id: "select",
-    //     header: ({ table }) => (
-    //         <Checkbox
-    //             checked={table.getIsAllPageRowsSelected()}
-    //             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-    //             aria-label="Select all"
-    //         />
-    //     ),
-    //     cell: ({ row }) => (
-    //         <Checkbox
-    //             checked={row.getIsSelected()}
-    //             onCheckedChange={(value) => row.toggleSelected(!!value)}
-    //             aria-label="Select row"
-    //         />
-    //     ),
-    //     enableSorting: false,
-    //     enableHiding: false,
-    // },
-    {
-        accessorKey: "Name",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Name
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="">{row.original.name}</div>,
-    },
-    {
-        accessorKey: "Description",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Description
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="">{row.original.description}</div>,
-    },
-    {
-        accessorKey: "Price",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Price
-                </Button>
-            )
-        },
-        cell: ({ row }) => {  return <div className="lowercase ml-5">${row.original.price}</div>},
-    },
-    {
-        accessorKey: "actionButtons",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    
-                </Button>
-            )
-        },
-        cell: ({ row }) => {  return <div className="lowercase ml-5">
-            
-        </div>},
-    },
-    //   {
-    //     id: "actions",
-    //     enableHiding: false,
-    //     cell: ({ row }) => {
-    //       const payment = row.original
-
-    //       return (
-    //         <DropdownMenu>
-    //           <DropdownMenuTrigger asChild>
-    //             <Button variant="ghost" className="h-8 w-8 p-0">
-    //               <span className="sr-only">Open menu</span>
-    //               <MoreHorizontal className="h-4 w-4" />
-    //             </Button>
-    //           </DropdownMenuTrigger>
-    //           <DropdownMenuContent align="end">
-    //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    //             <DropdownMenuItem
-    //               onClick={() => navigator.clipboard.writeText(payment.id)}
-    //             >
-    //               Copy payment ID
-    //             </DropdownMenuItem>
-    //             <DropdownMenuSeparator />
-    //             <DropdownMenuItem>View customer</DropdownMenuItem>
-    //             <DropdownMenuItem>View payment details</DropdownMenuItem>
-    //           </DropdownMenuContent>
-    //         </DropdownMenu>
-    //       )
-    //     },
-    //   },
-]
+import { deleteProduct, getProducts, getSiteSettings } from "@/lib/actions/dbActions"
+import { Categories, Products } from "@prisma/client"
+import { useRouter } from "next/navigation"
 
 export function ProductsTable() {
     const [sorting, setSorting] = React.useState<SortingState>([])
+    const [data, setData] = React.useState<Products[]>([]);
     const [showDialog, setShowDialog] = React.useState<boolean>(false);
     const [loading, setLoading] = React.useState<boolean>(false);
     const [imgsSrc, setImgsSrc] = React.useState<any>("");
@@ -167,15 +60,145 @@ export function ProductsTable() {
     const [mainImage, setProductMainImage] = React.useState<string>("");
     const [images, setImages] = React.useState<string>("");
     const { toast } = useToast();
-    const [data, setData] = React.useState<Products[]>([]);
+    const [siteSettings, setSiteSettings] = React.useState<any>({});
+    const [selectedCat, setSelectedCat] = React.useState<any>({});
+    const router = useRouter();
 
     React.useEffect(() => {
-        const getData = async () => {
-            setData(await getProducts());
-        };
-
         getData();
     }, [])
+
+    const getData = async () => {
+        setData(await getProducts());
+        setSiteSettings(await getSiteSettings());
+    };
+
+    const columns = [
+        {
+            accessorKey: "Name",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Name
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            },
+            cell: ({ row }) => <div className="ml-2">{row.original.name}</div>,
+        },
+        {
+            accessorKey: "Description",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                    // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Description
+                    </Button>
+                )
+            },
+            cell: ({ row }) => <div className="">{row.original.description}</div>,
+        },
+        {
+            accessorKey: "Price",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                    // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Price
+                    </Button>
+                )
+            },
+            cell: ({ row }) => { return <div className="lowercase ml-5">${row.original.price}</div> },
+        },
+        {
+            accessorKey: "actionButtons",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                    // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        <MoreHorizontal />
+                    </Button>
+                )
+            },
+            cell: ({ row }) => {
+                return <div className="lowercase">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Button
+                                variant="ghost"
+                            // onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            >
+                                <MoreHorizontal />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right">
+                            <DropdownMenuItem onClick={async () => {
+                                const product = await deleteProduct(row.original.id);
+                                console.log(product);
+                                // @ts-ignore
+                                if (product.error) {
+                                    return toast({
+                                        // @ts-ignore
+                                        description: product.error.message,
+                                        variant: "destructive"
+                                    })
+                                }
+
+                                toast({
+                                    description: `Deleted product ${row.original.name}`,
+                                    variant: "default"
+                                });
+                                await getData();
+                            }} className="cursor-pointer">
+                                Delete
+                                <DropdownMenuShortcut>
+                                    <Trash height={20} color="red" />
+                                </DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            },
+        },
+        //   {
+        //     id: "actions",
+        //     enableHiding: false,
+        //     cell: ({ row }) => {
+        //       const payment = row.original
+
+        //       return (
+        //         <DropdownMenu>
+        //           <DropdownMenuTrigger asChild>
+        //             <Button variant="ghost" className="h-8 w-8 p-0">
+        //               <span className="sr-only">Open menu</span>
+        //               <MoreHorizontal className="h-4 w-4" />
+        //             </Button>
+        //           </DropdownMenuTrigger>
+        //           <DropdownMenuContent align="end">
+        //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        //             <DropdownMenuItem
+        //               onClick={() => navigator.clipboard.writeText(payment.id)}
+        //             >
+        //               Copy payment ID
+        //             </DropdownMenuItem>
+        //             <DropdownMenuSeparator />
+        //             <DropdownMenuItem>View customer</DropdownMenuItem>
+        //             <DropdownMenuItem>View payment details</DropdownMenuItem>
+        //           </DropdownMenuContent>
+        //         </DropdownMenu>
+        //       )
+        //     },
+        //   },
+    ]
 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -206,7 +229,7 @@ export function ProductsTable() {
     const fileOnChange = (changeEvent: any) => {
         for (let file of changeEvent.target.files) {
             setImgsSrc(file)
-
+            console.log(file);
         }
     }
 
@@ -219,7 +242,7 @@ export function ProductsTable() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, description, url, sizes, mainImage: imgsSrc, images, price }) 
+            body: JSON.stringify({ name, description, url, sizes, mainImage: imgsSrc, images, price, selectedCat })
         }).then(async oldRes => await oldRes.json()).then(async res => {
             if (res.error) {
                 setLoading(false);
@@ -228,12 +251,14 @@ export function ProductsTable() {
                     variant: "destructive"
                 })
             } else {
-                setLoading(false)
                 toast({
                     description: `Product ${res.product.name} was created!`,
                     variant: "default"
                 });
 
+                setShowDialog(false);
+                setLoading(false);
+                await getData();
             }
         })
     }
@@ -404,12 +429,19 @@ export function ProductsTable() {
                                     required
                                     value={sizes} onChange={(e) => setSizes(e.target.value)} placeholder="xl, lg, sm" />
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="image">Main Product Image</Label>
                                 <Input id="image"
                                     disabled={loading}
                                     required
                                     onChange={fileOnChange} type="file" />
+                            </div> */}
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Main Product Image</Label>
+                                <Input id="name"
+                                    disabled={loading}
+                                    required
+                                    value={imgsSrc} onChange={(e) => setImgsSrc(e.target.value)} placeholder="xl, lg, sm" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="images">Product Images (Seperate with commas)</Label>
@@ -419,6 +451,34 @@ export function ProductsTable() {
                                     value={images} onChange={(e) => setImages(e.target.value)} placeholder="https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
                             https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
                             https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="plan">Categories</Label>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline">Select Categories{Object.values(selectedCat).filter((e) => e.checked === true).length !== 0 && " | "}{Object.values(selectedCat).filter((e) => e.checked === true).map((e) => { return `${e.name}`; }).join(", ")}</Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        <DropdownMenuLabel>Categories</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {siteSettings.categories && siteSettings.categories.map((cat: Categories) => (
+                                            <DropdownMenuCheckboxItem
+                                                checked={selectedCat[cat.id]?.checked || false}
+                                                onCheckedChange={(e) => {
+                                                    setSelectedCat({
+                                                        ...selectedCat,
+                                                        [cat.id]: {
+                                                            ...cat,
+                                                            checked: e
+                                                        }
+                                                    })
+                                                }}
+                                            >
+                                                {cat.name}
+                                            </DropdownMenuCheckboxItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                             {/* <div className="space-y-2">
                             <Label htmlFor="plan">Subscription plan</Label>

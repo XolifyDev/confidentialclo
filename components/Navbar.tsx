@@ -10,13 +10,28 @@ import { Button } from './ui/button';
 import { useSession } from 'next-auth/react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { User } from '@prisma/client';
-import { findUserByEmail } from '@/lib/actions/dbActions';
+import { findUserByEmail, getProductById } from '@/lib/actions/dbActions';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from './ui/dropdown-menu';
+import useGlobalStore, { CartItems } from '@/store/useGlobalStore';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { totalPrice } from '@/lib/utils';
 
 export default function Navbar() {
     const [clientWindowHeight, setClientWindowHeight] = useState<number | string>("");
     const session = useSession();
     const [userData, setUserData] = useState<User | null>(null);
+    const [cart, setCart] = useState<CartItems[]>([]);
+    const { cart: cartStore } = useGlobalStore();
+    const [totalCartCost, setTotalCart] = useState<number>(0);
+    useEffect(() => {
+        setCart(cartStore);
+        const setStuff = async () => {
+            setTotalCart(await totalPrice(cart))
+        }
+        setStuff();
+    }, [cartStore])
 
     useEffect(() => {
         const getUserData = async () => {
@@ -49,7 +64,7 @@ export default function Navbar() {
     }, [clientWindowHeight]);
 
     return (
-        <nav className={`scrollingNavbar ${showScrollClass && "scrolling"} flex-no-wrap absolute z-20 sticky top-0 flex w-full items-center bg-transparent py-4 lg:flex-wrap lg:justify-start`} data-te-navbar-ref="">
+        <nav className={`scrollingNavbar ${showScrollClass && "scrolling"} flex-no-wrap absolute z-20 sticky top-0 flex w-full items-center bg-transparent py-4 lg:flex-wrap lg:justify-start px-52`} data-te-navbar-ref="">
             <div className="flex w-full flex-wrap items-center justify-between px-6">
                 <button className="block border-0 bg-transparent px-2.5 py-2 text-neutral-500 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden" type="button" data-te-collapse-init="" data-te-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="[&amp;>svg]:w-7">
@@ -72,13 +87,96 @@ export default function Navbar() {
 
                 {session.status !== "unauthenticated" ? (
                     <div className="relative flex items-center">
-                        <a className="mr-4 text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&amp;.active]:text-black/90 dark:[&amp;.active]:text-neutral-400" href="#">
-                            <span className="[&amp;>svg]:w-5">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-                                    <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"></path>
-                                </svg>
-                            </span>
-                        </a>
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <a suppressHydrationWarning={true} className="mr-6 transition delay-75 text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&amp;.active]:text-black/90 dark:[&amp;.active]:text-neutral-400">
+                                    {cart.length > 0 ? (
+                                        <span className="absolute -top-1 right-[60%] rounded-full bg-teal-500 py-1 px-2 text-[9px] transition delay-75 font-bold text-black hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300">
+                                            {cart.length}
+                                        </span>
+                                    ) : <></>}
+                                    <span className="[&amp;>svg]:w-5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                                            <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"></path>
+                                        </svg>
+                                    </span>
+                                </a>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <SheetHeader>
+                                    <SheetTitle>Cart</SheetTitle>
+                                    <SheetDescription>
+                                        View Your Cart
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className="mt-8">
+                                    <div className="flow-root">
+                                        <ul role="list" className="-my-6 divide-y pb-2 divide-gray-200">
+                                            {cart.map(async (cartItem) => {
+                                                const product = await getProductById(cartItem.productId);
+
+                                                return (
+                                                    <li className="flex py-6">
+                                                        <div
+                                                            className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                            <Image src={product?.mainImage || "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"}
+                                                                alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                                                                className="h-full w-full object-cover object-center" height={100} width={100} />
+                                                        </div>
+
+                                                        <div className="ml-4 flex flex-1 flex-col">
+                                                            <div>
+                                                                <div
+                                                                    className="flex justify-between text-base font-medium text-gray-900">
+                                                                    <h3>
+                                                                        <a href={`/store/${product?.url}`}>{product?.name}</a>
+                                                                    </h3>
+                                                                    <p className="ml-4">${product?.price}</p>
+                                                                </div>
+                                                                <p className="mt-1 text-sm text-gray-500">{product?.description}</p>
+                                                            </div>
+                                                            <div className="flex flex-1 items-end justify-between text-sm">
+                                                                <p className="text-gray-500">Size {cartItem.size}</p>
+
+                                                                <div className="flex">
+                                                                    <button type="button"
+                                                                        className="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                                    <div className="flex justify-between text-base font-medium text-gray-900">
+                                        <p>Subtotal</p>
+                                        <p>${totalCartCost}</p>
+                                    </div>
+                                    <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                                    <div className="mt-6">
+                                        <a href="#"
+                                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</a>
+                                    </div>
+                                    <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                        <p>
+                                            or
+                                            <button type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                                Continue Shopping
+                                                <span aria-hidden="true"> &rarr;</span>
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                                {/* <SheetFooter>
+                                    <SheetClose asChild>
+                                        <Button type="submit">Save changes</Button>
+                                    </SheetClose>
+                                </SheetFooter> */}
+                            </SheetContent>
+                        </Sheet>
                         <div className="relative" data-te-dropdown-ref="">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>

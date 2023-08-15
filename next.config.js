@@ -4,6 +4,10 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: "https",
+                hostname: "cdn.xolify.store",
+            },
+            {
+                protocol: "https",
                 hostname: "**",
             },
         ],

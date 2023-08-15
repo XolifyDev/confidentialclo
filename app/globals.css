@@ -94,3 +94,25 @@ body {
 .scrollingNavbar.scrolling {
     background-color: var(--bg-color);
 }
+
+
+.font-helvitica {
+  font-family: Helvetica, sans-serif;
+}
+
+@keyframes animateIn {
+  0% {
+    /* display: none; */
+    opacity: 0;
+    /* margin-bottom: -2%; */
+  }
+  100% {
+    /* display: block; */
+    opacity: 1;
+    /* margin-bottom: 0%; */
+  }
+}
+
+.animateInCustom {
+   animation: animateIn .5s normal ease-in-out;
+}

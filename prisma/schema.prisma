@@ -65,6 +65,7 @@ model Products {
   mainImage String
   price String
   url String
+  categories String[]
 
   orderProducts OrderProducts[]
 }
@@ -92,10 +93,18 @@ model SiteSettings {
   totalOrders String @default("0")
   middleImage String
   mainHomeImage String
+  storeHomeImage String
+  mainDropLink String
 }
 
 model Revenue {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   date String
   amount String
+}
+
+model Categories {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  url String
 }

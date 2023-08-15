@@ -1,16 +1,16 @@
-import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
 import '../styles/index.css'
 import Head from 'next/head'
-import { config } from '@/config'
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
-import { supabase } from '@/lib/supabase'
-import { AuthContextProvider } from '@/lib/contexts/AuthContext'
+import { SessionProvider } from "next-auth/react"
+import "./styles.css"
 
-export default function MyApp({ Component, pageProps }: AppProps) {
-    const router = useRouter()
-    const { basePath } = useRouter()
+import type { AppProps } from "next/app"
+import type { Session } from "next-auth"
+
+export default function App({
+    Component,
+    pageProps: { session, ...pageProps },
+  }: AppProps<{ session: Session }>) {
 
     return (
         <>
@@ -21,9 +21,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
                 <link rel="manifest" href="/site.webmanifest" />
             </Head>
-            <AuthContextProvider>
+            <SessionProvider session={session}>
                 <Component {...pageProps} />
-            </AuthContextProvider>
+            </SessionProvider>
         </>
     )
 }

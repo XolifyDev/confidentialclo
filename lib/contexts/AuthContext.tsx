@@ -1,5 +1,5 @@
 "use client";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import getSession from "../actions/getSession";
 import { prisma } from "../db";
@@ -10,25 +10,25 @@ interface AuthContextProps {
 }
 
 type AuthContextProviderValue = {
-    user: User;
-    setUser: () => void;
+    user: User | null;
+    setUser: (arg: any) => void | null;
 }
 
-export const AuthContext = createContext<null | AuthContextProviderValue>(null);
+export const AuthContext = createContext<AuthContextProviderValue | null >(null);
 
 export const AuthContextProvider =  ({ children }: AuthContextProps) => {
     const [user, setUser] = useState<User | null>(null);
     
     useEffect(() => {
         const setSession = async () => {
-            const session = await getSession();
-            if (!session) {
+            const session = useSession()
+            if (session.status === "unauthenticated") {
                 return setUser(null);
             };
 
             const currentUser = await prisma.user.findUnique({
                 where: {
-                    email: session.user.email as string
+                    email: session.data?.user.email as string
                 }
             });
 

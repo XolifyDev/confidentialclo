@@ -1,7 +1,8 @@
 export const config = {
     siteInfo: {
         name: "Confidential Clothing",
-        description: "Clothing Brand"
+        description: "Clothing Brand",
+        instagram: "https://www.instagram.com/confidentialclo/",
     },
 
     supabase: {
