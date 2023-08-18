@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { prisma } from "../db";
+import { CartItems } from "@/store/useGlobalStore";
 
 export const findUserByEmail = async ({ email }: { email: string }) => {
   return await prisma.user.findUnique({
@@ -160,4 +161,29 @@ export const getProductById = async (id: string) => {
   });
   //   console.log(product);
   return product;
+};
+
+export const createCheckoutSession = async (
+  id: string,
+  userId: string,
+  items: any
+) => {
+  return await prisma.checkoutSession.create({
+    data: {
+      items,
+      sessionId: id,
+      userId,
+    },
+  });
+};
+
+export const getOrderBySession = async (sessionId: string) => {
+  return await prisma.orders.findFirst({
+    where: {
+      sessionId,
+    },
+    include: {
+      user: true,
+    },
+  });
 };

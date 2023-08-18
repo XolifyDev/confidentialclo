@@ -60,7 +60,7 @@ export default function Home() {
               <CollapsibleContent className={`space-y-1 flex flex-col`}>
                 {
                   categories.map((category) => (
-                    <Link href={`/store/${category.url}`} className="rounded-md px-4 py-3 font-helvitica text-sm animate-accordion-down cursor-pointer">
+                    <Link key={category.id} href={`/store/${category.url}`} className="rounded-md px-4 py-3 font-helvitica text-sm animate-accordion-down cursor-pointer">
                       - {category.name}
                     </Link>
                   ))
@@ -68,7 +68,7 @@ export default function Home() {
               </CollapsibleContent>
             </Collapsible>
             <Link href={config.siteInfo.instagram} className='border-t-[#d0cdcd] border-t-2 pt-3 pb-2'>
-                <Instagram className='w-7 h-7' />
+              <Instagram className='w-7 h-7' />
             </Link>
           </div>
           <div className="flex flex-col w-full">

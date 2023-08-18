@@ -9,8 +9,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/navigation'
 import { Toaster } from '@/components/ui/toaster';
 import { SessionProvider } from 'next-auth/react';
+import { DayPickerProvider } from 'react-day-picker';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from '@stripe/stripe-js';
 
 const inter = Inter({ subsets: ['latin'] })
+
 
 export const metadata: Metadata = {
   title: config.siteInfo.name,

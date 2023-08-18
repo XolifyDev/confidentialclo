@@ -2,6 +2,7 @@ import { CartItems } from "@/store/useGlobalStore";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { getProductById } from "./actions/dbActions";
+import { Readable } from "stream";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -20,4 +21,13 @@ export async function totalPrice(cart: CartItems[]) {
   }
 
   return price;
+}
+
+export async function getRawBody(readable: Readable): Promise<Buffer> {
+  const chunks = [];
+  for await (const chunk of readable) {
+    // @ts-ignore
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
 }
