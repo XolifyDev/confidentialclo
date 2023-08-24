@@ -22,6 +22,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { config } from '@/config';
 import { isMobile } from "react-device-detect";
 import * as rdd from 'react-device-detect';
+import { useRouter } from 'next/navigation';
 
 rdd.isMobile = true;
 
@@ -37,6 +38,7 @@ export default function Navbar() {
     const { cart: cartStore } = useGlobalStore();
     const [totalCost, setTotalCost] = useState<number>(0);
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
+    const router = useRouter();
 
     useEffect(() => {
         setCart(cartStore);
@@ -89,6 +91,10 @@ export default function Navbar() {
 
     // console.log(showCheckoutForm)
 
+    const hrefOnClick = (url: string) => {
+        setShowMobileMenu(false);
+        router.push(url);
+    }
 
 
     return (
@@ -322,15 +328,36 @@ export default function Navbar() {
                                 </div>
                             )}
                         </div>
-                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%]" />
-                        <div className="flex flex-col gap-2 px-3">
-                            <h1>
-                                Account
-                            </h1>
-                            <div className="pl-2 flex flex-col gap-2">
-
-                            </div>
+                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
+                        <div className="flex flex-col gap-2 px-4">
+                            {session.status !== "unauthenticated" && (
+                                <div className="flex flex-col gap-2">
+                                    <h1 className='font-bold'>
+                                        Account
+                                    </h1>
+                                    <div className="pl-3 flex flex-col gap-2">
+                                        <p onClick={() => hrefOnClick("/profile")} className='underline'>
+                                            -  Profile
+                                        </p>
+                                        <p onClick={() => hrefOnClick("/orders")} className='underline'>
+                                            -  Orders
+                                        </p>
+                                        <p onClick={() => hrefOnClick("/settings")} className='underline'>
+                                            -  Settings
+                                        </p>
+                                        {userData && userData?.isAdmin && (
+                                            <p onClick={() => hrefOnClick("/admin")} className='underline'>
+                                                -  Admin
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
+                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
+                        <p className='ml-2 underline font-bold' onClick={() => hrefOnClick("/profile")}>
+                            Store
+                        </p>
                     </div>
                 )}
             </nav >
