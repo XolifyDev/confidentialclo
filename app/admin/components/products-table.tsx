@@ -45,6 +45,10 @@ import { useToast } from "@/components/ui/use-toast"
 import { deleteProduct, getProducts, getSiteSettings } from "@/lib/actions/dbActions"
 import { Categories, Products } from "@prisma/client"
 import { useRouter } from "next/navigation"
+import { isMobile } from "react-device-detect";
+import * as rdd from 'react-device-detect';
+
+rdd.isMobile = true;
 
 export function ProductsTable() {
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -266,26 +270,18 @@ export function ProductsTable() {
     return (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
             <div className="w-full">
-                <div className="flex justify-between w-full py-4">
-                    <Input
-                        placeholder="Filter products..."
-                        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                        onChange={(event) =>
-                            table.getColumn("name")?.setFilterValue(event.target.value)
-                        }
-                        className="max-w-sm"
-                    />
-                    <div>
-                        <Button variant="outline" onClick={() => setShowDialog(true)} className="ml-auto">
+                <div className={`flex ${isMobile ? "flex-col gap-2" : "justify-between"} w-full py-4`}>
+                    <div className={`${isMobile ? "flex flex-col gap-2" : null}`}>
+                        <Button variant="outline" onClick={() => setShowDialog(true)}>
                             Add a product <PlusCircleIcon className="ml-2 h-4 w-4" />
                         </Button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="ml-auto">
+                                <Button variant="outline" className="">
                                     Columns <ChevronDown className="ml-2 h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="start">
                                 {table
                                     .getAllColumns()
                                     .filter((column) => column.getCanHide())
@@ -306,6 +302,14 @@ export function ProductsTable() {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
+                    <Input
+                        placeholder="Filter products..."
+                        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("name")?.setFilterValue(event.target.value)
+                        }
+                        className="max-w-sm"
+                    />
                 </div>
                 <div className="rounded-md border bg-card">
                     <Table>

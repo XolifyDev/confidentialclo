@@ -34,10 +34,19 @@ import { Pencil1Icon, Pencil2Icon } from "@radix-ui/react-icons";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
-import { createCategory, getSiteSettings, updateSiteSettings } from "@/lib/actions/dbActions";
+import { createCategory, findUserByEmail, getSiteSettings, updateSiteSettings } from "@/lib/actions/dbActions";
 import { MenuIcon, Plus, Settings, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import CategoriesTable from "./components/categories-table";
+import { useRouter, useSearchParams } from "next/navigation";
+import { silentUpdate } from "@/lib/utils";
+import { isMobile } from "react-device-detect";
+import * as rdd from 'react-device-detect';
+import OrdersTable from "./components/orders-table";
+import UsersTable from "./components/users-table";
+import { User } from "@prisma/client";
+
+rdd.isMobile = true;
 
 export const metadata: Metadata = {
     title: `Admin Dashboard - ${config.siteInfo.name}`,
@@ -46,6 +55,8 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
     const [loading, setLoading] = useState<boolean>(false);
+    const [loading2, setLoading2] = useState<boolean>(false);
+    const params = useSearchParams();
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [showCateogryDialog, setShowCatDialog] = useState<boolean>(false);
     const [navbarMiddleImage, setNavbarMiddleImage] = useState<string>("");
@@ -54,6 +65,7 @@ export default function DashboardPage() {
     const [totalRevenue, setTotoalRevenue] = useState<string>("0");
     const [totalOrders, setTotalOrders] = useState<string>("0");
     const [siteSettings, setSiteSettings] = useState<any>({});
+    const [userData, setUserData] = useState<User | null>(null);
     const [categoryValues, setCategoryValues] = useState<{ name: string, description: string, url: string }>({
         name: "",
         description: "",
@@ -61,8 +73,20 @@ export default function DashboardPage() {
     });
     const session = useSession();
     const { toast } = useToast();
+    const [tab, setSiteTab] = useState(params.get("tab") || "overview");
+    const router = useRouter();
 
     useEffect(() => {
+        setLoading2(true);
+        if (!session) return router.push("/");
+
+        const getUserData = async () => {
+            if (!session.data?.user) return;
+            const user = await findUserByEmail({ email: session.data.user.email });
+            setUserData(user);
+            setLoading2(false);
+        }
+        getUserData();
         getSiteSettings().then((e) => {
             setSiteSettings(e);
             setNavbarMiddleImage(e?.middleImage!);
@@ -72,6 +96,18 @@ export default function DashboardPage() {
             setTotalOrders(e?.totalOrders!);
         })
     }, [])
+
+    useEffect(() => {
+        if (!loading2) return;
+
+        if (!userData) {
+            console.log('no user data');
+
+            return router.push("/")
+        }
+
+        if (!userData.isAdmin) return router.push("/");
+    }, [userData])
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -118,7 +154,7 @@ export default function DashboardPage() {
                 variant: "destructive"
             })
         }).then((res) => {
-            if(!res) return;
+            if (!res) return;
             if (res.error) {
                 setLoading(false)
                 return toast({
@@ -136,23 +172,198 @@ export default function DashboardPage() {
         })
     }
 
+    const setTab = (tab: string) => {
+        setSiteTab(tab);
+        silentUpdate('/admin?tab=' + tab);
+    }
+
     return (
         <>
-            <div className="md:hidden">
-                <Image
-                    src="/examples/dashboard-light.png"
-                    width={1280}
-                    height={866}
-                    alt="Dashboard"
-                    className="block dark:hidden"
-                />
-                <Image
-                    src="/examples/dashboard-dark.png"
-                    width={1280}
-                    height={866}
-                    alt="Dashboard"
-                    className="hidden dark:block"
-                />
+            <div className="border-b-2 border-black h-2" />
+            <div className={`lg:hidden flex flex-row w-full h-[100vh] mb-4`}>
+                <div className="flex flex-col gap-1 h-full w-24 items-center items-start bg-zinc-100 py-2">
+                    <Button onClick={() => setTab("overview")} variant={"secondary"}>
+                        Overview
+                    </Button>
+                    <Button onClick={() => setTab("orders")} variant={"secondary"}>
+                        Orders
+                    </Button>
+                    <Button onClick={() => setTab("products")} variant={"secondary"}>
+                        Products
+                    </Button>
+                    <Button onClick={() => setTab("users")} variant={"secondary"}>
+                        Users
+                    </Button>
+                    <Button onClick={() => setTab("store")} variant={"secondary"}>
+                        Store
+                    </Button>
+                    <div className="border-b-2 border-black h-2 w-full" />
+                    <Button onClick={() => setShowDialog(true)} variant={"secondary"}>
+                        Site Settings
+                    </Button>
+                </div>
+                <div className="w-full max-w-full overflow-x-hidden px-1 py-2 mb-4">
+                    {tab === "overview" ? (
+                        <>
+                            <div className=" max-w-full overflow-x-auto gap-2 flex flex-row">
+                                <Card className="w-[10rem]">
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">
+                                            Total Revenue
+                                        </CardTitle>
+                                        {/* <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            className="h-4 w-4 text-muted-foreground"
+                                        >
+                                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                        </svg> */}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-2xl font-bold">${totalRevenue}</div>
+
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">
+                                            Subscriptions
+                                        </CardTitle>
+                                        {/* <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            className="h-4 w-4 text-muted-foreground"
+                                        >
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                            <circle cx="9" cy="7" r="4" />
+                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                                        </svg> */}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-2xl font-bold">+2350</div>
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">Orders</CardTitle>
+                                        {/* <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            className="h-4 w-4 text-muted-foreground"
+                                        >
+                                            <rect width="20" height="14" x="2" y="5" rx="2" />
+                                            <path d="M2 10h20" />
+                                        </svg> */}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-2xl font-bold">{totalOrders}</div>
+                                    </CardContent>
+                                </Card>
+                                <Card className="w-36">
+                                    <CardHeader className="flex flex-row items-center items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">
+                                            Made By
+                                        </CardTitle>
+                                        {/* <Settings fontSize={2} /> */}
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex flex-row w-full items-center mt-1 justify-between">
+                                            <div className="text-2xl font-bold">Xolify</div>
+                                            {/* <Image
+                                                src={'https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png'}
+                                                alt="Xolify Logo"
+                                                width={45}
+                                                height={45}
+                                            /> */}
+                                        </div>
+                                        <Link href={'https://xolify.store'} target="_blank" className="text-xs transition delay-75 hover:underline text-blue-600">
+                                            My Store
+                                        </Link>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Card className="col-span-4">
+                                    <CardHeader>
+                                        <CardTitle>Overview</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pl-2">
+                                        <Overview />
+                                    </CardContent>
+                                </Card>
+                                <Card className="col-span-3 mb-4">
+                                    <CardHeader>
+                                        <CardTitle>Recent Sales</CardTitle>
+                                        <CardDescription>
+                                            You made 265 sales this month.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="max-w-full overflow-x-auto">
+                                        <RecentSales />
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </>
+                    ) : tab === "products" ? (
+                        <div className="max-w-full overflow-x-auto">
+                            <ProductsTable />
+                        </div>
+                    ) : tab === "store" ? (
+                        <>
+                            <div className="flex flex-col gap-2">
+                                <Card className="w-full">
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">
+                                            Products Count
+                                        </CardTitle>
+                                        <ShoppingBasket fontSize={2} />
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-2xl font-bold">{siteSettings.products ? siteSettings.products.length : "0"}</div>
+                                    </CardContent>
+                                </Card>
+                                <Card className="w-full">
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">
+                                            Cateogry Count
+                                        </CardTitle>
+                                        <MenuIcon fontSize={2} />
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex flex-row justify-between items-center w-full">
+                                            <div className="text-2xl font-bold">{siteSettings.categories ? siteSettings.categories.length : "0"}</div>
+                                            <Button value="sitesettings" onClick={() => setShowCatDialog(true)} className="flex flex-row items-center gap-2 ">
+                                                Create a category
+                                                <Plus fontSize={25} fontWeight={600} />
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                            <h1 className="border-b-black border-b-2 text-xl mt-4 mb-2">Categories</h1>
+                            <CategoriesTable />
+                        </>
+                    ) : tab === "orders" ? (
+                        <OrdersTable />
+                    ) : tab === "users" ? (
+                        <UsersTable />
+                    ) : null}
+                </div>
             </div>
             <div className="hidden flex-col md:flex">
                 {/* <div className="border-b">
@@ -169,7 +380,7 @@ export default function DashboardPage() {
                     </div>
                     <Tabs defaultValue="overview" className="space-y-4">
                         <div className="flex w-full flex-row justify-between">
-                            <TabsList>
+                            <TabsList defaultValue={tab}>
                                 <TabsTrigger value="overview">Overview</TabsTrigger>
                                 <TabsTrigger value="orders">
                                     Orders
@@ -339,7 +550,13 @@ export default function DashboardPage() {
                                 </Card>
                             </div>
                             <h1 className="border-b-black border-b-2 text-xl">Categories</h1>
-                            <CategoriesTable /> 
+                            <CategoriesTable />
+                        </TabsContent>
+                        <TabsContent value="orders" className="space-y-4">
+                            <OrdersTable />
+                        </TabsContent>
+                        <TabsContent value="users" className="space-y-4">
+                            <UsersTable />
                         </TabsContent>
                     </Tabs>
                 </div>

@@ -31,3 +31,6 @@ export async function getRawBody(readable: Readable): Promise<Buffer> {
   }
   return Buffer.concat(chunks);
 }
+
+export const silentUpdate = (url: string) =>
+  window.history.replaceState(null, null, url);

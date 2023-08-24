@@ -22,46 +22,46 @@ const ProductCard = ({
         <div>
             <div className="max-w-[350px] h-[30rem] p-4 mx-auto shadow-xl rounded-xl relative group">
                 {/* image div */}
-                <Link href={`/store/${category.url}/${product.url}`}>
-                    <div className="h-64 block rounded overflow-hidden">
+                <div className="h-64 block rounded overflow-hidden">
+                    <Link href={`/store/${category.url}/${product.url}`}>
                         <Image src={product.mainImage} alt="bestseeling" height={300} width={300} />
-                    </div>
+                    </Link>
+                </div>
 
-                    {/* typography  */}
-                    <div className="mt-4">
-                        {/* title && se murad h k agr title h to h2 wala code show kro */}
-                        {product.name && (
-                            <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-myblackhead line-clamp-1">
-                                {product.name}
-                            </h2>
-                        )}
+                {/* typography  */}
+                <div className="mt-4">
+                    {/* title && se murad h k agr title h to h2 wala code show kro */}
+                    {product.name && (
+                        <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-myblackhead line-clamp-1">
+                            {product.name}
+                        </h2>
+                    )}
 
-                        {product.description && (
-                            <p className="mt-2 scroll-m-20 text-sm font-semibold tracking-tight text-myblackpara line-clamp-2">
-                                {product.description}
+                    {product.description && (
+                        <p className="mt-2 scroll-m-20 text-sm font-semibold tracking-tight text-myblackpara line-clamp-2">
+                            {product.description}
+                        </p>
+                    )}
+
+                    {product.price && (
+                        <div className="flex gap-3">
+                            <p
+                                className={`mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1 ${discount > 0 &&
+                                    "line-through decoration-2 decoration-myorange/70"
+                                    }`}
+                            >
+                                ${product.price}
                             </p>
-                        )}
-
-                        {product.price && (
-                            <div className="flex gap-3">
-                                <p
-                                    className={`mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1 ${discount > 0 &&
-                                        "line-through decoration-2 decoration-myorange/70"
-                                        }`}
-                                >
-                                    ${product.price}
+                            {/* discounted value */}
+                            {discount > 0 && (
+                                <p className="mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1">
+                                    {/* @ts-ignore */}
+                                    ${product.price - (product.price * discount) / 100}
                                 </p>
-                                {/* discounted value */}
-                                {discount > 0 && (
-                                    <p className="mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1">
-                                        {/* @ts-ignore */}
-                                        ${product.price - (product.price * discount) / 100}
-                                    </p>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </Link>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 {/* button div */}
                 <div className="mt-2">

@@ -73,7 +73,7 @@ const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
         </style>
         <div className="top flex flex-col gap-3">
             <span className="text-blue-500">
-                Hey {user.firstName} <span className=''>👋</span>! Thank you for your purchase!
+                Hey {!user.name ? `${user.firstName} ${user.lastName}` : user.name} <span className=''>👋</span>! Thank you for your purchase!
             </span>
             <span className="font-bold text-2xl">
                 It's on its way!

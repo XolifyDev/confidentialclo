@@ -37,4 +37,10 @@ export const config = {
   resend: {
     apiKey: "re_X9ap6WEs_KbDFTKKZ1fCEbgM7Xp36kGJk",
   },
+
+  google: {
+    clientId:
+      "777443537845-ei2lalr4f52pmkrc9u12n5rbg0kf7igm.apps.googleusercontent.com",
+    clientSecret: "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",
+  },
 };

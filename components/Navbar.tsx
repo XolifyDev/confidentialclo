@@ -21,6 +21,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { config } from '@/config';
 import { isMobile } from "react-device-detect";
+import { useRouter } from 'next/navigation';
 import * as rdd from 'react-device-detect';
 
 rdd.isMobile = true;
@@ -37,6 +38,7 @@ export default function Navbar() {
     const { cart: cartStore } = useGlobalStore();
     const [totalCost, setTotalCost] = useState<number>(0);
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
+    const router = useRouter();
 
     useEffect(() => {
         setCart(cartStore);
@@ -61,7 +63,9 @@ export default function Navbar() {
         const getUserData = async () => {
             if (!session.data?.user) return;
             const user = await findUserByEmail({ email: session.data.user.email });
+            // @ts-ignore
             setSiteSettings(await getSiteSettings());
+            // console.log(`${!userData?.name ? `${userData?.firstName && userData?.firstName.charAt(0) || ""} ${userData?.lastName && userData?.lastName.charAt(0) || ""}` : `${userData?.name && userData?.name.split(" ")[0].charAt(0)} ${userData?.name && userData?.name.split(" ")[1].charAt(0)}`}`)
             setUserData(user);
         }
         getUserData();
@@ -89,13 +93,17 @@ export default function Navbar() {
 
     // console.log(showCheckoutForm)
 
+    const hrefOnClick = (url: string) => {
+        setShowMobileMenu(false);
+        router.push(url);
+    }
 
 
     return (
         <>
-            <nav className={`scrollingNavbar ${showScrollClass && "scrolling"} flex-no-wrap z-20 sticky top-0 flex w-full items-center bg-transparent py-4 lg:flex-wrap lg:justify-start ${!isMobile ? "px-52" : "-top-2 pr-4"} relative`} data-te-navbar-ref="">
+            <nav className={`scrollingNavbar ${showScrollClass && "scrolling"} flex-no-wrap z-10 sticky top-0 flex w-full items-center bg-transparent py-4 lg:flex-wrap lg:justify-start ${!isMobile ? "px-52" : "-top-2"} relative`} data-te-navbar-ref="">
                 <div className="flex w-full flex-wrap items-center justify-between px-6 z-0">
-                    <button className="block border-0 bg-transparent px-2.5 py-2 text-neutral-500 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden" type="button" data-te-collapse-init="" data-te-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
+                    <button onClick={() => setShowMobileMenu(true)} className="block border-0 bg-transparent px-2.5 py-2 text-neutral-500 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden" type="button">
                         <span className="[&amp;>svg]:w-7">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7">
                                 <path fillRule="evenodd" d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clipRule="evenodd"></path>
@@ -217,8 +225,8 @@ export default function Navbar() {
                                             <DropdownMenuTrigger asChild>
                                                 <div className="cursor-pointer hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none">
                                                     <Avatar>
-                                                        <AvatarImage src={userData?.image!} alt={userData?.firstName!} />
-                                                        <AvatarFallback>{userData?.firstName && userData?.firstName.charAt(0) || ""}{userData?.lastName && userData?.lastName.charAt(0) || ""}</AvatarFallback>
+                                                        <AvatarImage src={userData?.image!} alt={`${userData?.firstName || userData?.name}`} />
+                                                        <AvatarFallback>{!userData?.name ? `${userData?.firstName && userData?.firstName.charAt(0) || ""} ${userData?.lastName && userData?.lastName.charAt(0) || ""}` : `${userData?.name && userData?.name.split(" ")[0].charAt(0)} ${userData?.name && userData?.name.split(" ")[1].charAt(0)}`}</AvatarFallback>
                                                     </Avatar>
                                                 </div>
                                             </DropdownMenuTrigger>
@@ -290,7 +298,7 @@ export default function Navbar() {
                     )}
                 </div>
                 {showMobileMenu && (
-                    <div className="absolute w-full h-[100vh] bottom-0 right-0 bg-[#eee8e8] z-[9999] top-0 flex flex-col py-1 px-2">
+                    <div className="custom_fadeIn fixed w-full h-[100vh] bottom-0 right-0 bg-[#eee8e8] z-[9999] top-0 flex flex-col py-1 px-2">
                         <div className="flex flex-row w-[23rem] justify-between -mt-2 items-center">
                             <Image
                                 src={`/logo.png`}
@@ -298,39 +306,65 @@ export default function Navbar() {
                                 height={100}
                                 width={100}
                                 className='h-[120px] w-[120px]'
-                                loading="lazy"
+                                onClick={() => hrefOnClick("/")}
+                            // loading="lazy"
                             />
                             {session.status !== "unauthenticated" ? (
                                 <div>
                                     <div className="cursor-pointer hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none">
                                         <Avatar>
                                             <AvatarImage src={userData?.image!} alt={userData?.firstName!} />
-                                            <AvatarFallback>{userData?.firstName && userData?.firstName.charAt(0) || ""}{userData?.lastName && userData?.lastName.charAt(0) || ""}</AvatarFallback>
+                                            <AvatarFallback>{!userData?.name ? `${userData?.firstName && userData?.firstName.charAt(0) || ""} ${userData?.lastName && userData?.lastName.charAt(0) || ""}` : `${userData?.name && userData?.name.split(" ")[0].charAt(0)} ${userData?.name && userData?.name.split(" ")[1].charAt(0)}`}</AvatarFallback>
                                         </Avatar>
                                     </div>
 
                                 </div>
                             ) : (
                                 <div>
-                                    <Link href={'/login'}
-                                    // className={`py-1 px-4  ${showScrollClass ? "bg-slate-700 text-white" : "bg-white text-black"} transition-colors rounded`}
-                                    >
-                                        <Button>
-                                            Login
-                                        </Button>
-                                    </Link>
+                                    <Button onClick={() => hrefOnClick("/login")}>
+                                        Login
+                                    </Button>
                                 </div>
                             )}
                         </div>
-                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%]" />
-                        <div className="flex flex-col gap-2 px-3">
-                            <h1>
-                                Account
-                            </h1>
-                            <div className="pl-2 flex flex-col gap-2">
-
-                            </div>
+                        <div className="flex flex-col gap-2 px-4">
+                            {session.status !== "unauthenticated" && (
+                                <>
+                                    <div className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
+                                    <div className="flex flex-col gap-2">
+                                        <h1 className='font-bold'>
+                                            Account
+                                        </h1>
+                                        <div className="pl-3 flex flex-col gap-2">
+                                            <p onClick={() => hrefOnClick("/profile")} className='underline'>
+                                                -  Profile
+                                            </p>
+                                            <p onClick={() => hrefOnClick("/orders")} className='underline'>
+                                                -  Orders
+                                            </p>
+                                            <p onClick={() => hrefOnClick("/settings")} className='underline'>
+                                                -  Settings
+                                            </p>
+                                            {userData && userData?.isAdmin && (
+                                                <p onClick={() => hrefOnClick("/admin")} className='underline'>
+                                                    -  Admin
+                                                </p>
+                                            )}
+                                            <Button onClick={() => signOut()} className='w-32'>
+                                                Logout
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
+                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
+                        <p className='ml-4 underline font-bold' onClick={() => hrefOnClick("/profile")}>
+                            Store
+                        </p>
+                        <Button className='absolute bottom-7 right-3' onClick={() => setShowMobileMenu(false)}>
+                            Close
+                        </Button>
                     </div>
                 )}
             </nav >

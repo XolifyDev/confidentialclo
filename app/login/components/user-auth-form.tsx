@@ -93,7 +93,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                     router.push('/')
                 }
             })
-            .finally(() => setIsLoading(false));
+                .finally(() => setIsLoading(false));
         }
 
         // setTimeout(() => {
@@ -157,7 +157,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
           </span>
         </div> */}
             </div>
-            <Button variant="outline" type="button" disabled={isLoading}>
+            <Button onClick={() => signIn("google")} variant="outline" type="button" disabled={isLoading}>
                 {isLoading ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 ) : (

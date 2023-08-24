@@ -49,7 +49,7 @@ const SideBar = () => {
                 <CollapsibleContent className={`space-y-1 flex flex-col`}>
                     {
                         categories.map((category) => (
-                            <Link href={`/store/${category.url}`} className="rounded-md px-4 py-3 font-helvitica text-sm animate-accordion-down cursor-pointer">
+                            <Link key={category.id} href={`/store/${category.url}`} className="rounded-md px-4 py-3 font-helvitica text-sm animate-accordion-down cursor-pointer">
                                 - {category.name}
                             </Link>
                         ))

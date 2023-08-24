@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { prisma } from "../db";
 import { CartItems } from "@/store/useGlobalStore";
+import { Orders, User } from "@prisma/client";
 
 export const findUserByEmail = async ({ email }: { email: string }) => {
   return await prisma.user.findFirst({
@@ -188,7 +189,7 @@ export const createCheckoutSession = async (
     },
   });
 
-  items.forEach(async (e) => {
+  items.forEach(async (e: any) => {
     await prisma.orderProducts.create({
       data: {
         orderId: order.id,
@@ -248,4 +249,33 @@ export const updateStatus = async (status: string, orderId: string) => {
     },
   });
   console.log(order);
+};
+
+interface OrderNewInterface extends Orders {
+  user: User;
+}
+
+export const getOrdersWithUser = async () => {
+  let orders: OrderNewInterface[] = [];
+
+  const odb = await prisma.orders.findMany();
+  for (let i = 0; i < odb.length; i++) {
+    const e = odb[i];
+    const user = await prisma.user.findFirst({
+      where: {
+        id: e.userId,
+      },
+    });
+
+    orders.push({
+      ...e,
+      user: user!,
+    });
+  }
+
+  return { orders };
+};
+
+export const getUsers = async () => {
+  return await prisma.user.findMany();
 };
