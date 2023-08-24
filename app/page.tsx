@@ -7,12 +7,13 @@ import { config } from '@/config';
 import { getSiteSettings } from '@/lib/actions/dbActions';
 import { Categories } from '@prisma/client';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { ChevronDownIcon, ChevronUpIcon, ChevronsUpDown, Instagram, Star } from 'lucide-react';
+import { ArrowDown, ChevronDownIcon, ChevronUpIcon, ChevronsUpDown, Instagram, Star } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Image from 'next/image'
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 
 
 export default function Home() {
@@ -34,7 +35,11 @@ export default function Home() {
   return (
     <>
       {/* <Navbar session={session} /> */}
-      <div style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: "url(https://supabase.com/_next/image?url=%2Fimages%2Fblog%2Fpluggable-storage%2Fpluggable-storage.jpg&w=1920&q=75)" }} className="flex min-h-screen h-screen flex-col items-center justify-between -mt-[7.69vh] mb-[5%] pt-16" />
+      <div style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: "url(https://supabase.com/_next/image?url=%2Fimages%2Fblog%2Fpluggable-storage%2Fpluggable-storage.jpg&w=1920&q=75)" }} className={`relative flex min-h-screen h-screen flex-col items-center justify-between ${!isMobile ? "-mt-[7.695vh]" : "-mt-[8.9vh]"} mb-[5%] pt-16`}>
+        <div className="arrowDown absolute bottom-5 animate-bounce mb-2 mr-11">
+          <ArrowDown color='white' className='w-10 h-12' />
+        </div>
+      </div>
       <main className="px-60 w-full mb-[10%]">
         <div className="flex flex-row justify-between gap-10 w-full">
           <div className="flex flex-col gap-2 w-[20rem]">

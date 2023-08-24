@@ -55,6 +55,7 @@ export function Combobox({ value, setValue, data, label, className }: ComboboxPr
                                     setValue(currentValue === value ? "" : currentValue)
                                     setOpen(false)
                                 }}
+                                className="cursor-pointer"
                             >
                                 <Check
                                     className={cn(

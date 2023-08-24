@@ -5,7 +5,7 @@ import { prisma } from "../db";
 import { CartItems } from "@/store/useGlobalStore";
 
 export const findUserByEmail = async ({ email }: { email: string }) => {
-  return await prisma.user.findUnique({
+  return await prisma.user.findFirst({
     where: {
       email,
     },
@@ -168,13 +168,40 @@ export const createCheckoutSession = async (
   userId: string,
   items: any
 ) => {
-  return await prisma.checkoutSession.create({
+  const session = await prisma.checkoutSession.create({
     data: {
       items,
       sessionId: id,
       userId,
+      completed: "false",
     },
   });
+  const order = await prisma.orders.create({
+    data: {
+      sessionId: id,
+      status: "not_shipped",
+      // user: userId,
+      userId,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  items.forEach(async (e) => {
+    await prisma.orderProducts.create({
+      data: {
+        orderId: order.id,
+        productId: e.productId,
+        size: e.size,
+      },
+    });
+  });
+
+  return {
+    session,
+    order,
+  };
 };
 
 export const getOrderBySession = async (sessionId: string) => {
@@ -186,4 +213,39 @@ export const getOrderBySession = async (sessionId: string) => {
       user: true,
     },
   });
+};
+
+export const getOrderById = async (id: string) => {
+  return await prisma.orders.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+    },
+  });
+};
+
+export const getOrderProductsByOrderId = async (orderId: string) => {
+  return await prisma.orderProducts.findMany({
+    where: {
+      orderId,
+    },
+    include: {
+      product: true,
+    },
+  });
+};
+
+export const updateStatus = async (status: string, orderId: string) => {
+  console.log(status, orderId);
+  const order = await prisma.orders.update({
+    where: {
+      id: orderId,
+    },
+    data: {
+      status: status,
+    },
+  });
+  console.log(order);
 };

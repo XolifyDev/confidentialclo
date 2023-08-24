@@ -6,11 +6,14 @@ import "./styles.css"
 
 import type { AppProps } from "next/app"
 import type { Session } from "next-auth"
+import * as rdd from 'react-device-detect';
+
+rdd.isMobile = true;
 
 export default function App({
     Component,
     pageProps: { session, ...pageProps },
-  }: AppProps<{ session: Session }>) {
+}: AppProps<{ session: Session }>) {
 
     return (
         <>

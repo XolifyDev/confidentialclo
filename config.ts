@@ -20,4 +20,21 @@ export const config = {
     apiKey:
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFndHVyeWNwcnVudGZyYndxZWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTA3MzY3OTUsImV4cCI6MjAwNjMxMjc5NX0.ycsJ8MzHUXdJ5Mn_MTBVlrbVXtNV9cQ-eIYqgg_CBz4",
   },
+
+  emails: {
+    transporter: {
+      host: "smtp.zoho.com",
+      port: "465",
+      secure: true,
+      auth: {
+        user: "noreply@xolify.store",
+        pass: "Waleed7867$!",
+      },
+    },
+    html: "<div style='padding: 1em; word-break: break-word; word-wrap: break-word;'><img src='{LOGO}' width='125px' height='125px' style='text-align: center; margin-left: auto; margin-right: auto;'><h2 stype='padding-bottom: 8px; width: 70%; margin-left: auto; margin-right: auto; border-bottom: solid 2px black'>{SITE_NAME}</h2><hr> <p style='text-align: start; padding-bottom: 1em;'>{REPLACE_CONTENT}</p><hr><a href='{DOMAIN}/account' style='padding: 1em;' target='_blank'>Change Communication Preferences</a></div>",
+  },
+
+  resend: {
+    apiKey: "re_X9ap6WEs_KbDFTKKZ1fCEbgM7Xp36kGJk",
+  },
 };

@@ -57,6 +57,9 @@ export const checkout = async (items: Cart[]) => {
     line_items: lineItems,
     mode: "payment",
     success_url: `${config.siteInfo.domain}/checkout/success?sessionId={CHECKOUT_SESSION_ID}`,
+    shipping_address_collection: {
+      allowed_countries: ["US"],
+    },
   });
 };
 

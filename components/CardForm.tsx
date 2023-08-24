@@ -106,11 +106,12 @@ const CardForm = ({ user }: { user: User }) => {
         setTimeout(() => {
             checkout(lineItems).then(async (data) => {
                 console.log(data)
-                createCheckoutSession(data.id, user.id, cart)
-                await stripe?.redirectToCheckout({
-                    sessionId: data.id
+                await createCheckoutSession(data.id, user.id, cart).then(async () => {
+                    await stripe?.redirectToCheckout({
+                        sessionId: data.id
+                    })
+                    setLoading(false);
                 })
-                setLoading(false);
             })
         }, 1000)
     }
