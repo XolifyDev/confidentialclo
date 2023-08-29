@@ -23,6 +23,7 @@ import { config } from '@/config';
 import { isMobile } from "react-device-detect";
 import { useRouter } from 'next/navigation';
 import * as rdd from 'react-device-detect';
+import { useRouter } from 'next/navigation';
 
 rdd.isMobile = true;
 
@@ -327,44 +328,15 @@ export default function Navbar() {
                                 </div>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2 px-4">
-                            {session.status !== "unauthenticated" && (
-                                <>
-                                    <div className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
-                                    <div className="flex flex-col gap-2">
-                                        <h1 className='font-bold'>
-                                            Account
-                                        </h1>
-                                        <div className="pl-3 flex flex-col gap-2">
-                                            <p onClick={() => hrefOnClick("/profile")} className='underline'>
-                                                -  Profile
-                                            </p>
-                                            <p onClick={() => hrefOnClick("/orders")} className='underline'>
-                                                -  Orders
-                                            </p>
-                                            <p onClick={() => hrefOnClick("/settings")} className='underline'>
-                                                -  Settings
-                                            </p>
-                                            {userData && userData?.isAdmin && (
-                                                <p onClick={() => hrefOnClick("/admin")} className='underline'>
-                                                    -  Admin
-                                                </p>
-                                            )}
-                                            <Button onClick={() => signOut()} className='w-32'>
-                                                Logout
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
+                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%]" />
+                        <div className="flex flex-col gap-2 px-3">
+                            <h1>
+                                Account
+                            </h1>
+                            <div className="pl-2 flex flex-col gap-2">
+
+                            </div>
                         </div>
-                        <div className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
-                        <p className='ml-4 underline font-bold' onClick={() => hrefOnClick("/profile")}>
-                            Store
-                        </p>
-                        <Button className='absolute bottom-7 right-3' onClick={() => setShowMobileMenu(false)}>
-                            Close
-                        </Button>
                     </div>
                 )}
             </nav >
