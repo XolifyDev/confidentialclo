@@ -2,7 +2,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { PrismaClient } from "@prisma/client";
-import { config } from "@/config";
+import { config as config1 } from "@/config";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -47,12 +47,11 @@ export const authOptions: AuthOptions = {
 
         return user;
       },
-
     }),
 
     GoogleProvider({
-      clientId: config.google.clientId,
-      clientSecret: config.google.clientSecret,
+      clientId: config1.google.clientId,
+      clientSecret: config1.google.clientSecret,
     }),
   ],
   //   debug: process.env.NODE_ENV === "development",
@@ -74,7 +73,7 @@ export const authOptions: AuthOptions = {
     },
     async signIn({ account, profile }) {
       console.log(account, profile, "ACCOUNT PROFILE");
-        
+
       return true; // Do different verification for other providers that don't have `email_verified`
     },
   },
@@ -85,7 +84,5 @@ export const authOptions: AuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
-// export default handler;
 
 export { handler as GET, handler as POST };
