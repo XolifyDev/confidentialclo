@@ -1,4 +1,4 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { PrismaClient } from "@prisma/client";
@@ -6,11 +6,9 @@ import { config as config1 } from "@/config";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/db";
 
-export const runtime = "edge";
-
-export const authOptions: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     // GoogleProvider({
