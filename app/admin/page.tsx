@@ -48,10 +48,10 @@ import { User } from "@prisma/client";
 
 
 
-export const metadata: Metadata = {
-    title: `Admin Dashboard - ${config.siteInfo.name}`,
-    description: `Admin Dashboard for ${config.siteInfo.name}`,
-}
+// export const metadata: Metadata = {
+//     title: `Admin Dashboard - ${config.siteInfo.name}`,
+//     description: `Admin Dashboard for ${config.siteInfo.name}`,
+// }
 
 export default function DashboardPage() {
     const [loading, setLoading] = useState<boolean>(false);

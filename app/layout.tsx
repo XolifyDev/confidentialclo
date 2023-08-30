@@ -1,5 +1,3 @@
-"use client";
-
 import { config } from '@/config'
 import './globals.css'
 import type { Metadata } from 'next'
