@@ -160,4 +160,4 @@ const handler = NextAuth({
   secret: "awdawd12312asdawd",
 });
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, authOptions };
