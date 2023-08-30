@@ -126,7 +126,7 @@ const Page = ({ params }: props) => {
                                             ) : null}
                                         </div>
                                         <span className="font-bold text-2xl">
-                                            It's on its way!
+                                            It&apos;s on its way!
                                         </span>
                                         <span className="text-sm text-gray-500">
                                             Your order #{order.id} {value === "shipped" ? "has been shipped and will be with you soon!" : value === "being_shipped" ? "is getting shipped and will be at your doorsteps soon!" : value === "not_shipped" ? "is being proccessed and will be shipped soon!" : "is being proccessed and will be shipped soon!"}

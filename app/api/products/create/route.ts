@@ -9,9 +9,6 @@ import bcrypt from "bcrypt";
 import getCurrentUser from "@/lib/actions/getCurrentUser";
 import { uniqueId } from "lodash";
 
-export const config = {
-  bodyParser: true,
-};
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
@@ -90,8 +87,8 @@ export async function POST(req: NextApiRequest) {
   // const mainImageSrc = supabase.storage.from("images").getPublicUrl(`products/${imageId}.png`);
   // @ts-ignore
   let categories = Object.entries(selectedCat)
-    .filter((e) => e[1].checked === true)
-    .map((e) => {
+    .filter((e: any) => e[1].checked === true)
+    .map((e: any) => {
       // @ts-ignore
       return e[1].checked === true ? e[1].name : null;
     });

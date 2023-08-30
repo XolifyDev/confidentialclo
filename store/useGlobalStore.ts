@@ -45,6 +45,8 @@ export const initialState: IGlobalStateValues = {
     image: null,
     lastName: "",
     isAdmin: false,
+    emailVerified: false,
+    name: "",
   },
   cart: [],
 };

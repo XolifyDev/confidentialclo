@@ -21,16 +21,16 @@ const UsersTable = () => {
     }, [])
 
     const getData = async () => {
-        getUsers().then((e) => {
+        getUsers().then((e: any) => {
             setData(e)
-            console.log(e)
+            // console.log(e: any)
         })
     }
 
     const columns = [
         {
             accessorKey: "Id",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -39,11 +39,11 @@ const UsersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => <div className="ml-5">{row.original.id}</div>,
+            cell: ({ row }: { row: any }) => <div className="ml-5">{row.original.id}</div>,
         },
         {
             accessorKey: "Name",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -53,7 +53,7 @@ const UsersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="ml-2">
                     {!row.original.name ? `${row.original.user.firstName} ${row.original.user.lastName}` : row.orginal.name}
                 </div>
@@ -61,7 +61,7 @@ const UsersTable = () => {
         },
         {
             accessorKey: "Email",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -71,7 +71,7 @@ const UsersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="lowercase ml-2">
                     {row.original.email}
                 </div>
@@ -79,7 +79,7 @@ const UsersTable = () => {
         },
         {
             accessorKey: "ViewMore",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -89,7 +89,7 @@ const UsersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="ml-6">
                     Click&nbsp;
                     <Link target='_blank' className='text-blue-500 hover:underline transition-all' href={`/users/${row.original.id}`}>
@@ -100,7 +100,7 @@ const UsersTable = () => {
         },
         {
             accessorKey: "Admin",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -111,7 +111,7 @@ const UsersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="lowercase">
                     <DropdownMenu>
                         <DropdownMenuTrigger>
@@ -143,7 +143,7 @@ const UsersTable = () => {
         //   {
         //     id: "actions",
         //     enableHiding: false,
-        //     cell: ({ row }) => {
+        //     cell: ({ row} : { row: any }) => {
         //       const payment = row.original
 
         //       return (

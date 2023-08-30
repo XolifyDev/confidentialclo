@@ -8,6 +8,7 @@ import { Products } from '@prisma/client';
 import useGlobalStore from '@/store/useGlobalStore';
 import { uniqueId } from 'lodash';
 import { useToast } from '@/components/ui/use-toast';
+import Image from 'next/image';
 
 // const product = {
 //     name: 'Basic Tee 6-Pack ',
@@ -92,7 +93,7 @@ const ProductPage = ({ product }: ProductPageProps) => {
 
                             <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                                 <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-                                    <img src={product.mainImage} alt={product.name} className="object-cover object-center" />
+                                    <Image width={100} height={100} src={product.mainImage} alt={product.name} className="object-cover object-center" />
                                 </div>
                                 <div className="sm:col-span-8 lg:col-span-7">
                                     <h2 className="text-2xl font-bold text-gray-900 text-center">{product.name}</h2>

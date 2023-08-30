@@ -1,9 +1,8 @@
-import type { NextApiResponse, NextApiRequest } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { buffer } from "micro";
 import Stripe from "stripe";
 import { config as config1 } from "@/config";
 import { prisma } from "@/lib/db";
-import { emailer } from "@/lib/emailer";
 import {
   getOrderBySession,
   getOrderProductsByOrderId,
@@ -17,12 +16,6 @@ import { headers } from "next/headers";
 export const stripe = new Stripe(config1.stripe.clientSecret, {
   apiVersion: "2022-11-15",
 });
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 async function getRawBody(readable: Readable): Promise<Buffer> {
   const chunks = [];

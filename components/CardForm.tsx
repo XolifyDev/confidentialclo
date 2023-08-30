@@ -68,13 +68,6 @@ const CardForm = ({ user }: { user: User }) => {
     //     appearance
     // });
 
-    useEffect(() => {
-        const init = async () => {
-            // @ts-ignore
-            const paymentIntent = await stripe?.retrieveSetupIntent();
-        }
-    }, [])
-
     // const handleSubmit = async (e: FormDataEvent) => {
     //     e.preventDefault();
 

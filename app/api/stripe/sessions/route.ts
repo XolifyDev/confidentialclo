@@ -10,9 +10,7 @@ import getCurrentUser from "@/lib/actions/getCurrentUser";
 import { uniqueId } from "lodash";
 import Stripe from "stripe";
 import { config as config1 } from "@/config";
-export const config = {
-  bodyParser: true,
-};
+
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
@@ -65,7 +63,7 @@ export async function POST(req: NextApiRequest) {
       mode: "payment",
       success_url: `${req.headers.origin}/checkout/success?sessionId={CHECKOUT_SESSION_ID}`,
     })
-    .catch((e) => console.log(e, "EROEROEROEOREOREOROEROEROERO"));
+    .catch((e: any) => console.log(e, "EROEROEROEOREOREOROEROEROERO"));
   console.log(session, "SESSION");
   return NextResponse.json({ session });
   // } catch (error) {

@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
 import { useToast } from "@/components/ui/use-toast";
 
-rdd.isMobile = true;
+
 
 export const metadata: Metadata = {
     title: "Authentication",
@@ -35,7 +35,7 @@ export default function AuthenticationPage() {
                 })
             }
         }
-    }, [])
+    }, [searchParams, toast])
     return (
         <>
             {!isMobile ? (

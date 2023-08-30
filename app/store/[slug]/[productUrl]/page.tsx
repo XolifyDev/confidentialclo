@@ -6,7 +6,7 @@ import { ArrowDown } from 'lucide-react';
 import { isMobile } from 'react-device-detect';
 import * as rdd from 'react-device-detect';
 
-rdd.isMobile = true;
+
 interface IParams {
     productUrl: string;
     slug: string;

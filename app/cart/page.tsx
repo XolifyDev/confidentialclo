@@ -1,4 +1,4 @@
-"use client";   
+"use client";
 
 import { getProductById } from '@/lib/actions/dbActions';
 import useGlobalStore, { CartItems } from '@/store/useGlobalStore';

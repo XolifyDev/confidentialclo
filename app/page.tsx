@@ -27,7 +27,7 @@ export default function Home() {
   }, [])
 
   const getData = async () => {
-    getSiteSettings().then((e) => {
+    getSiteSettings().then((e: any) => {
       setSiteSettings(e);
       setCategories(e.categories);
     })

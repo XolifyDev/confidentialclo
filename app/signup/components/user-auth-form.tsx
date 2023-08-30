@@ -83,7 +83,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             disabled={isLoading}
                             required
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e: any) => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="grid gap-1">
@@ -100,7 +100,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             disabled={isLoading}
                             required
                             value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={(e: any) => setFirstName(e.target.value)}
                         />
                     </div>
                     <div className="grid gap-1">
@@ -117,7 +117,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             disabled={isLoading}
                             required
                             value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
+                            onChange={(e: any) => setLastName(e.target.value)}
                         />
                     </div>
                     <div className="grid gap-1">
@@ -134,7 +134,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             required
                             disabled={isLoading}
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e: any) => setPassword(e.target.value)}
                         />
                     </div>
                     <Button disabled={isLoading}>
@@ -163,7 +163,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                 )}{" "}
                 Google
             </Button>
-            <p className="text-sm text-center">Already have an account? click <Link
+            <p className="text-sm text-center">Already have an account? Click <Link
                 href="/login"
                 className="text-blue-400"
             >

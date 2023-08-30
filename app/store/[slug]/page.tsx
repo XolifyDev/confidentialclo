@@ -5,7 +5,7 @@ import { ArrowDown } from 'lucide-react';
 import { isMobile } from 'react-device-detect';
 import * as rdd from 'react-device-detect';
 
-rdd.isMobile = true;
+
 interface IParams {
     slug: string;
 }
@@ -29,7 +29,7 @@ export default async function Home({ params }: { params: IParams }) {
                     <div className="flex flex-col gap-5 w-full border-t-[#d0cdcd] border-t-2 pt-5">
                         <h1 className='text-xl'>{info.category?.name}</h1>
                         <div className="flex flex-row gap-3">
-                            {info.products.map((product) => (
+                            {info.products.map((product: any) => (
                                 <ProductCard
                                     category={info.category!}
                                     product={product!}

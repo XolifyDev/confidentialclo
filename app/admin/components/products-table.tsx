@@ -48,7 +48,7 @@ import { useRouter } from "next/navigation"
 import { isMobile } from "react-device-detect";
 import * as rdd from 'react-device-detect';
 
-rdd.isMobile = true;
+
 
 export function ProductsTable() {
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -80,7 +80,7 @@ export function ProductsTable() {
     const columns = [
         {
             accessorKey: "Name",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -91,11 +91,11 @@ export function ProductsTable() {
                     </Button>
                 )
             },
-            cell: ({ row }) => <div className="ml-2">{row.original.name}</div>,
+            cell: ({ row }: { row: any }) => <div className="ml-2">{row.original.name}</div>,
         },
         {
             accessorKey: "Description",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -105,11 +105,11 @@ export function ProductsTable() {
                     </Button>
                 )
             },
-            cell: ({ row }) => <div className="">{row.original.description}</div>,
+            cell: ({ row }: { row: any }) => <div className="">{row.original.description}</div>,
         },
         {
             accessorKey: "Price",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -119,11 +119,11 @@ export function ProductsTable() {
                     </Button>
                 )
             },
-            cell: ({ row }) => { return <div className="lowercase ml-5">${row.original.price}</div> },
+            cell: ({ row }: { row: any }) => { return <div className="lowercase ml-5">${row.original.price}</div> },
         },
         {
             accessorKey: "actionButtons",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -133,7 +133,7 @@ export function ProductsTable() {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="lowercase">
                     <DropdownMenu>
                         <DropdownMenuTrigger>
@@ -176,7 +176,7 @@ export function ProductsTable() {
         //   {
         //     id: "actions",
         //     enableHiding: false,
-        //     cell: ({ row }) => {
+        //     cell: ({ row} : { row: any }) => {
         //       const payment = row.original
 
         //       return (
@@ -402,14 +402,14 @@ export function ProductsTable() {
                                     <Input
                                         disabled={loading}
                                         required
-                                        id="name" value={name} onChange={(e) => setProductName(e.target.value)} placeholder="Baggy T-Shirt" />
+                                        id="name" value={name} onChange={(e: any) => setProductName(e.target.value)} placeholder="Baggy T-Shirt" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="price">Product price</Label>
                                     <Input
                                         disabled={loading}
                                         required
-                                        id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="100" />
+                                        id="price" value={price} onChange={(e: any) => setPrice(e.target.value)} placeholder="100" />
                                 </div>
                             </div>
                             <div className="space-y-2">
@@ -417,21 +417,21 @@ export function ProductsTable() {
                                 <Textarea
                                     disabled={loading}
                                     required
-                                    id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="A Baggy T-Shirt for your everyday needs." />
+                                    id="description" value={description} onChange={(e: any) => setDescription(e.target.value)} placeholder="A Baggy T-Shirt for your everyday needs." />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="url">Product Site URL (/store/baggy-tshirt)</Label>
                                 <Input id="url"
                                     disabled={loading}
                                     required
-                                    value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Acme Inc." />
+                                    value={url} onChange={(e: any) => setUrl(e.target.value)} placeholder="Acme Inc." />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="name">Product sizes (Seperate with commas. ",")</Label>
+                                <Label htmlFor="name">Product sizes (Seperate with commas. &quot;,&quot;)</Label>
                                 <Input id="name"
                                     disabled={loading}
                                     required
-                                    value={sizes} onChange={(e) => setSizes(e.target.value)} placeholder="xl, lg, sm" />
+                                    value={sizes} onChange={(e: any) => setSizes(e.target.value)} placeholder="xl, lg, sm" />
                             </div>
                             {/* <div className="space-y-2">
                                 <Label htmlFor="image">Main Product Image</Label>
@@ -445,14 +445,14 @@ export function ProductsTable() {
                                 <Input id="name"
                                     disabled={loading}
                                     required
-                                    value={imgsSrc} onChange={(e) => setImgsSrc(e.target.value)} placeholder="xl, lg, sm" />
+                                    value={imgsSrc} onChange={(e: any) => setImgsSrc(e.target.value)} placeholder="xl, lg, sm" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="images">Product Images (Seperate with commas)</Label>
                                 <Textarea id="images"
                                     disabled={loading}
                                     required
-                                    value={images} onChange={(e) => setImages(e.target.value)} placeholder="https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
+                                    value={images} onChange={(e: any) => setImages(e.target.value)} placeholder="https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
                             https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png,
                             https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png" />
                             </div>
@@ -460,7 +460,7 @@ export function ProductsTable() {
                                 <Label htmlFor="plan">Categories</Label>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline">Select Categories{Object.values(selectedCat).filter((e) => e.checked === true).length !== 0 && " | "}{Object.values(selectedCat).filter((e) => e.checked === true).map((e) => { return `${e.name}`; }).join(", ")}</Button>
+                                        <Button variant="outline">Select Categories{Object.values(selectedCat).filter((e: any) => e.checked === true).length !== 0 && " | "}{Object.values(selectedCat).filter((e: any) => e.checked === true).map((e: any) => { return `${e.name}`; }).join(", ")}</Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
                                         <DropdownMenuLabel>Categories</DropdownMenuLabel>
@@ -468,7 +468,8 @@ export function ProductsTable() {
                                         {siteSettings.categories && siteSettings.categories.map((cat: Categories) => (
                                             <DropdownMenuCheckboxItem
                                                 checked={selectedCat[cat.id]?.checked || false}
-                                                onCheckedChange={(e) => {
+                                                key={cat.id}
+                                                onCheckedChange={(e: any) => {
                                                     setSelectedCat({
                                                         ...selectedCat,
                                                         [cat.id]: {

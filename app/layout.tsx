@@ -14,7 +14,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from '@stripe/stripe-js';
 import * as rdd from 'react-device-detect';
 
-rdd.isMobile = true;
+
 
 const inter = Inter({ subsets: ['latin'] })
 

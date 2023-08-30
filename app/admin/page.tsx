@@ -46,7 +46,7 @@ import OrdersTable from "./components/orders-table";
 import UsersTable from "./components/users-table";
 import { User } from "@prisma/client";
 
-rdd.isMobile = true;
+
 
 export const metadata: Metadata = {
     title: `Admin Dashboard - ${config.siteInfo.name}`,
@@ -87,7 +87,7 @@ export default function DashboardPage() {
             setLoading2(false);
         }
         getUserData();
-        getSiteSettings().then((e) => {
+        getSiteSettings().then((e: any) => {
             setSiteSettings(e);
             setNavbarMiddleImage(e?.middleImage!);
             setMainImageDropLink(e.mainDropLink!);
@@ -95,7 +95,7 @@ export default function DashboardPage() {
             setTotoalRevenue(e?.totalRevenue!);
             setTotalOrders(e?.totalOrders!);
         })
-    }, [])
+    }, [router, session])
 
     useEffect(() => {
         if (!loading2) return;
@@ -107,7 +107,7 @@ export default function DashboardPage() {
         }
 
         if (!userData.isAdmin) return router.push("/");
-    }, [userData])
+    }, [userData, router, loading2])
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -120,7 +120,7 @@ export default function DashboardPage() {
             });
         }
 
-        updateSiteSettings({ middleImage: navbarMiddleImage, mainHomeImage: mainImageHome, mainDropLink: mainImageDropLink }).catch((e) => {
+        updateSiteSettings({ middleImage: navbarMiddleImage, mainHomeImage: mainImageHome, mainDropLink: mainImageDropLink }).catch((e: any) => {
             setLoading(false)
             return toast({
                 description: e,
@@ -147,13 +147,13 @@ export default function DashboardPage() {
             });
         }
 
-        createCategory({ description: categoryValues.description, name: categoryValues.name, url: categoryValues.url }).catch((e) => {
+        createCategory({ description: categoryValues.description, name: categoryValues.name, url: categoryValues.url }).catch((e: any) => {
             setLoading(false)
             return toast({
                 description: e,
                 variant: "destructive"
             })
-        }).then((res) => {
+        }).then((res: any) => {
             if (!res) return;
             if (res.error) {
                 setLoading(false)
@@ -581,7 +581,7 @@ export default function DashboardPage() {
                                         disabled={loading}
                                         required
                                         value={navbarMiddleImage}
-                                        onChange={(e) => setNavbarMiddleImage(e.target.value)}
+                                        onChange={(e: any) => setNavbarMiddleImage(e.target.value)}
                                         id="mid-image" placeholder="Image LINK" />
                                 </div>
                                 <h1 className="border-b">
@@ -593,7 +593,7 @@ export default function DashboardPage() {
                                         disabled={loading}
                                         required
                                         value={mainImageHome}
-                                        onChange={(e) => setMainImageHome(e.target.value)}
+                                        onChange={(e: any) => setMainImageHome(e.target.value)}
                                         id="main-image" placeholder="Image LINK" />
                                 </div>
                                 <div className="space-y-2">
@@ -602,7 +602,7 @@ export default function DashboardPage() {
                                         disabled={loading}
                                         required
                                         value={mainImageDropLink}
-                                        onChange={(e) => setMainImageDropLink(e.target.value)}
+                                        onChange={(e: any) => setMainImageDropLink(e.target.value)}
                                         id="main-image-link" placeholder="Category Link" />
                                 </div>
                             </div>
@@ -645,7 +645,7 @@ export default function DashboardPage() {
                                             disabled={loading}
                                             required
                                             value={categoryValues.name}
-                                            onChange={(e) => setCategoryValues({
+                                            onChange={(e: any) => setCategoryValues({
                                                 ...categoryValues,
                                                 name: e.target.value
                                             })}
@@ -657,7 +657,7 @@ export default function DashboardPage() {
                                             disabled={loading}
                                             required
                                             value={categoryValues.description}
-                                            onChange={(e) => setCategoryValues({
+                                            onChange={(e: any) => setCategoryValues({
                                                 ...categoryValues,
                                                 description: e.target.value
                                             })}
@@ -671,7 +671,7 @@ export default function DashboardPage() {
                                         required
                                         value={categoryValues.url}
                                         maxLength={10}
-                                        onChange={(e) => setCategoryValues({
+                                        onChange={(e: any) => setCategoryValues({
                                             ...categoryValues,
                                             url: e.target.value
                                         })}

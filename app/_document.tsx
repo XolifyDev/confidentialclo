@@ -1,10 +1,8 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { useRouter } from 'next/router'
 
 export default class MyDocument extends Document {
 
     render() {
-        const { basePath } = useRouter()
         return (
             <Html lang="en" suppressHydrationWarning={true} suppressContentEditableWarning={true}>
                 {/* <Head>

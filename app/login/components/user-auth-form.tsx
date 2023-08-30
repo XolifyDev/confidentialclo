@@ -119,7 +119,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             disabled={isLoading}
                             required
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e: any) => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="grid gap-1">
@@ -136,7 +136,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                             required
                             disabled={isLoading}
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e: any) => setPassword(e.target.value)}
                         />
                     </div>
                     <Button disabled={isLoading}>
@@ -165,7 +165,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                 )}{" "}
                 Google
             </Button>
-            <p className="text-sm text-center">Don't have an account? click <Link
+            <p className="text-sm text-center">Don&apos;t have an account? Click <Link
                 href="/signup"
                 className="text-blue-400"
             >

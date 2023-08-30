@@ -64,7 +64,7 @@ const CheckoutSuccess = () => {
                                             Thank you for your purchase!
                                         </span>
                                         <span className="font-bold text-2xl">
-                                            It's on its way!
+                                            It&apos;s on its way!
                                         </span>
                                         <span className="text-sm text-gray-500">
                                             Your order #{order.id} {order.status === "shipped" ? "has been shipped and will be with you soon!" : order.status === "being_shipped" ? "is getting shipped and will be at your doorsteps soon!" : order.status === "not_shipped" ? "is being proccessed and will be shipped soon!" : "is being proccessed and will be shipped soon!"}

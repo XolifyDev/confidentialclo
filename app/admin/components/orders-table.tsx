@@ -33,7 +33,7 @@ const OrdersTable = () => {
     const columns = [
         {
             accessorKey: "ID",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -45,11 +45,11 @@ const OrdersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => <div className="ml-5">{row.original.id}</div>,
+            cell: ({ row }: { row: any }) => <div className="ml-5">{row.original.id}</div>,
         },
         {
             accessorKey: "User",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -59,7 +59,7 @@ const OrdersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="ml-2">
                     {!row.original.name ? `${row.original.user.firstName} ${row.original.user.lastName}` : row.orginal.name}
                 </div>
@@ -67,7 +67,7 @@ const OrdersTable = () => {
         },
         {
             accessorKey: "Url",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -77,9 +77,9 @@ const OrdersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="ml-2">
-                    <Link target='_blank' className='text-blue-500 hover:underline transition-all's href={`/orders/${row.original.id}`}>
+                    <Link target='_blank' className='text-blue-500 hover:underline transition-all' href={`/orders/${row.original.id}`}>
                         View Order
                     </Link>
                 </div>
@@ -87,7 +87,7 @@ const OrdersTable = () => {
         },
         {
             accessorKey: "Status",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -97,7 +97,7 @@ const OrdersTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="ml-2">
                     {row.original.status}
                 </div>

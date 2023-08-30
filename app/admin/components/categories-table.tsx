@@ -21,7 +21,7 @@ const CategoriesTable = () => {
     }, [])
 
     const getData = async () => {
-        getSiteSettings().then((e) => {
+        getSiteSettings().then((e: any) => {
             setData(e.categories);
         })
     }
@@ -29,7 +29,7 @@ const CategoriesTable = () => {
     const columns = [
         {
             accessorKey: "Name",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -40,11 +40,11 @@ const CategoriesTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => <div className="ml-5">{row.original.name}</div>,
+            cell: ({ row }: { row: any }) => <div className="ml-5">{row.original.name}</div>,
         },
         {
             accessorKey: "Url",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -54,13 +54,15 @@ const CategoriesTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => { return <div className="lowercase ml-2"><Link target='_blank' className='text-blue-500 hover:underline transition-all' href={'/store/' + row.original.url}>
-                {row.original.url}
-            </Link></div> },
+            cell: ({ row }: { row: any }) => {
+                return <div className="lowercase ml-2"><Link target='_blank' className='text-blue-500 hover:underline transition-all' href={'/store/' + row.original.url}>
+                    {row.original.url}
+                </Link></div>
+            },
         },
         {
             accessorKey: "actionButtons",
-            header: ({ column }) => {
+            header: ({ column }: { column: any }) => {
                 return (
                     <Button
                         variant="ghost"
@@ -70,7 +72,7 @@ const CategoriesTable = () => {
                     </Button>
                 )
             },
-            cell: ({ row }) => {
+            cell: ({ row }: { row: any }) => {
                 return <div className="lowercase">
                     <DropdownMenu>
                         <DropdownMenuTrigger>
@@ -113,7 +115,7 @@ const CategoriesTable = () => {
         //   {
         //     id: "actions",
         //     enableHiding: false,
-        //     cell: ({ row }) => {
+        //     cell: ({ row} : { row: any }) => {
         //       const payment = row.original
 
         //       return (

@@ -24,7 +24,7 @@ import { isMobile } from "react-device-detect";
 import * as rdd from 'react-device-detect';
 import { useRouter } from 'next/navigation';
 
-rdd.isMobile = true;
+
 
 const stripePromise = loadStripe(config.stripe.publishableKey);
 
