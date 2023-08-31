@@ -51,7 +51,7 @@ export default function Home() {
               <SideBar />
               <div className="flex flex-col w-full">
                 <Link
-                  href={siteSettings.mainDropLink ? siteSettings.mainDropLink : "/store"}
+                  href={siteSettings.mainDropLink ? siteSettings.mainDropLink : "/"}
                 >
                   <Image
                     src={siteSettings.storeHomeImage ? siteSettings.storeHomeImage : "https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png"}
