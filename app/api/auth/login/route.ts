@@ -42,6 +42,7 @@ export async function POST(req: NextApiRequest) {
 
   signIn("credentials", {
     ...body,
+    redirect: false,
   }).then(async (callback) => {
     if (callback?.error) {
       return NextResponse.json({
