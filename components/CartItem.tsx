@@ -1,10 +1,12 @@
 import { getProductById } from '@/lib/actions/dbActions'
+import useGlobalStore from '@/store/useGlobalStore'
 import { Products } from '@prisma/client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 const CartItem = ({ cartItem }: { cartItem: any }) => {
     const [product, setProduct] = useState<Products | null>(null);
+    const { removeItemFromCart } = useGlobalStore();
 
     useEffect(() => {
         fetch('/api/products/id', {
@@ -40,7 +42,7 @@ const CartItem = ({ cartItem }: { cartItem: any }) => {
                     <p suppressHydrationWarning={true} className="text-gray-500">Size {cartItem.size}</p>
 
                     <div suppressHydrationWarning={true} className="flex">
-                        <button suppressHydrationWarning={true} type="button"
+                        <button onClick={() => removeItemFromCart(cartItem.id)} suppressHydrationWarning={true} type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
                     </div>
                 </div>

@@ -36,7 +36,7 @@ export default function Navbar() {
     const [userData, setUserData] = useState<User | null>(null);
     const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
     const [cart, setCart] = useState<CartItems[]>([]);
-    const { cart: cartStore } = useGlobalStore();
+    const { cart: cartStore, removeItemFromCart } = useGlobalStore();
     const [totalCost, setTotalCost] = useState<number>(0);
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
     const router = useRouter();
@@ -125,7 +125,7 @@ export default function Navbar() {
                         </button>
                         <div suppressHydrationWarning={true} className="!visible hidden items-center lg:!flex lg:basis-auto" id="navbarSupportedContent1" data-te-collapse-item="">
                             <a suppressHydrationWarning={true} className="mr-2 mt-2 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mt-0" href="/">
-                                <Image suppressHydrationWarning={true} src="/logo.png" width={100} height={100} className='h-[40px] w-[60px] object-cover' alt="" loading="lazy" />
+                                <Image suppressHydrationWarning={true} src="/logo.png" width={100} height={100} className='h-[40px] w-[60px] object-cover rounded' alt="" loading="lazy" />
                             </a>
                         </div>
 
@@ -204,7 +204,7 @@ export default function Navbar() {
                                                                             <p suppressHydrationWarning={true} className="text-gray-500">Size {cartItem.size}</p>
 
                                                                             <div suppressHydrationWarning={true} className="flex">
-                                                                                <button suppressHydrationWarning={true} type="button"
+                                                                                <button onClick={() => removeItemFromCart(cartItem.id)} suppressHydrationWarning={true} type="button"
                                                                                     className="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
                                                                             </div>
                                                                         </div>

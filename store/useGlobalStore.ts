@@ -28,6 +28,7 @@ export interface IGlobalState extends IGlobalStateValues {
   setState: (state: Partial<IGlobalStateValues>) => void;
   setUser: (state: Partial<IDatabaseUser>) => void;
   addItemToCart: (state: any) => void;
+  removeItemFromCart: (state: any) => void;
 }
 
 export const initialState: IGlobalStateValues = {
@@ -81,6 +82,11 @@ const useGlobalStore = create<IGlobalState>()(
         addItemToCart: (newItem: CartItems): void => {
           set((state) => ({
             cart: [...state.cart, newItem],
+          }));
+        },
+        removeItemFromCart: (item: string): void => {
+          set((state) => ({
+            cart: state.cart.filter((i) => i.id !== item),
           }));
         },
       }),
