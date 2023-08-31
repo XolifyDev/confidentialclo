@@ -20,12 +20,9 @@ import { isMobile } from 'react-device-detect';
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
   const [categories, setCategories] = useState<Categories[]>([]);
-  const [siteSettings, setSiteSettings] = useState<any>({})
   const [domLoaded, setDomLoaded] = useState<boolean>(false);
+  const [siteSettings, setSiteSettings] = useState<any>({})
 
-  useEffect(() => {
-    setDomLoaded(true);
-  }, [])
   useEffect(() => {
     fetch('/api/sitesettings', {
       method: "GET"
@@ -35,13 +32,16 @@ export default function Home() {
       setCategories(e.categories);
     })
   }, [])
+  useEffect(() => {
+    setDomLoaded(true);
+  }, [])
 
   return (
     <>
       {domLoaded ? (
         <>
           {/* <Navbar session={session} /> */}
-          <div style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: "url(https://supabase.com/_next/image?url=%2Fimages%2Fblog%2Fpluggable-storage%2Fpluggable-storage.jpg&w=1920&q=75)" }} className={`relative flex min-h-screen h-screen flex-col items-center justify-between ${!isMobile ? "-mt-[7.695vh]" : "-mt-[8.9vh]"} mb-[5%] pt-16`}>
+          <div style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: `url(${siteSettings.mainHomeImage})` }} className={`relative flex min-h-screen h-screen flex-col items-center justify-between ${!isMobile ? "-mt-[7.695vh]" : "-mt-[8.9vh]"} mb-[5%] pt-16`}>
             <div className={`arrowDown absolute bottom-5 animate-bounce mb-2 ${isMobile ? "" : "mr-11"}`}>
               <ArrowDown color='white' className='w-10 h-12' />
             </div>

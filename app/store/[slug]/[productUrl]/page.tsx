@@ -18,7 +18,17 @@ interface IParams {
 export default function Home({ params }: { params: IParams }) {
     const [info, setInfo] = useState<any>(null);
     const [product, setProduct] = useState<any>(null);
+    const [siteSettings, setSiteSettings] = useState<any>({})
 
+    useEffect(() => {
+        fetch('/api/sitesettings', {
+            method: "GET"
+        }).then(res => res.json()).then((e) => {
+            console.log(e)
+            setSiteSettings(e);
+            // setCategories(e.categories);
+        })
+    })
     useEffect(() => {
         fetch('/api/categories/url', {
             method: "GET",
@@ -40,7 +50,7 @@ export default function Home({ params }: { params: IParams }) {
     return (
         <>
             {/* <Navbar session={session} /> */}
-            <div suppressHydrationWarning={true} style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: "url(https://supabase.com/_next/image?url=%2Fimages%2Fblog%2Fpluggable-storage%2Fpluggable-storage.jpg&w=1920&q=75)" }} className={`relative flex min-h-screen h-screen flex-col items-center justify-between ${!isMobile ? "-mt-[7.695vh]" : "-mt-[8.9vh]"} mb-[5%] pt-16`}>
+            <div style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: `url(${siteSettings.mainHomeImage})` }} className={`relative flex min-h-screen h-screen flex-col items-center justify-between ${!isMobile ? "-mt-[7.695vh]" : "-mt-[8.9vh]"} mb-[5%] pt-16`}>
                 <div suppressHydrationWarning={true} className={`arrowDown absolute bottom-5 animate-bounce mb-2 ${isMobile ? "" : "mr-11"}`}>
                     <ArrowDown color='white' className='w-10 h-12' />
                 </div>
