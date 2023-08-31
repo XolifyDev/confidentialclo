@@ -19,18 +19,15 @@ export async function GET(req: NextApiRequest) {
       error: { message: "You need to be logged in!" },
     });
 
-  await prisma.user
-    .update({
-      where: {
-        id,
-      },
-      data: {
-        isAdmin: true,
-      },
-    })
-    .then(() => {
-      return NextResponse.json({
-        done: true,
-      });
-    });
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      isAdmin: true,
+    },
+  });
+  return NextResponse.json({
+    done: true,
+  });
 }
