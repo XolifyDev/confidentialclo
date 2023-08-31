@@ -256,17 +256,12 @@ export default function Navbar() {
                                                     </DropdownMenuLabel>
                                                     <DropdownMenuSeparator suppressHydrationWarning={true} />
                                                     <DropdownMenuGroup suppressHydrationWarning={true}>
-                                                        <a href="/profile" suppressHydrationWarning={true}>
+                                                        <a href="/account" suppressHydrationWarning={true}>
                                                             <DropdownMenuItem suppressHydrationWarning={true} className='cursor-pointer'>
-                                                                Profile
+                                                                Account
                                                             </DropdownMenuItem>
                                                         </a>
-                                                        <a suppressHydrationWarning={true} href="/orders">
-                                                            <DropdownMenuItem suppressHydrationWarning={true} className='cursor-pointer'>
-                                                                Orders
-                                                            </DropdownMenuItem>
-                                                        </a>
-                                                        <a suppressHydrationWarning={true} href="/settings">
+                                                        <a suppressHydrationWarning={true} href="/account/settings">
                                                             <DropdownMenuItem suppressHydrationWarning={true} className='cursor-pointer'>
                                                                 Settings
                                                             </DropdownMenuItem>
@@ -314,14 +309,14 @@ export default function Navbar() {
                     </div>
                     {showMobileMenu && (
                         <div suppressHydrationWarning={true} className={`custom_fadeIn fixed w-full h-[100vh] bottom-0 right-0 bg-[#eee8e8] z-[9999] top-0 ${isMobileSafari ? "-mt-4" : null} flex flex-col py-1 px-2`}>
-                            <div suppressHydrationWarning={true} className="flex flex-row w-[23rem] justify-between -mt-2 items-center">
+                            <div suppressHydrationWarning={true} className="flex flex-row w-[23rem] justify-between items-center">
                                 <Image
                                     suppressHydrationWarning={true}
-                                    src={`/logo.png`}
+                                    src={`/favicon.png`}
                                     alt='logo'
                                     height={100}
                                     width={100}
-                                    className='h-[120px] w-[120px]'
+                                    className='h-[120px] w-[150px] object-cover rounded'
                                     onClick={() => hrefOnClick("/")}
                                 // loading="lazy"
                                 />
@@ -352,13 +347,10 @@ export default function Navbar() {
                                                 Account
                                             </h1>
                                             <div suppressHydrationWarning={true} className="pl-3 flex flex-col gap-2">
-                                                <p onClick={() => hrefOnClick("/profile")} className='underline'>
+                                                <p onClick={() => hrefOnClick("/account")} className='underline'>
                                                     -  Profile
                                                 </p>
-                                                <p suppressHydrationWarning={true} onClick={() => hrefOnClick("/orders")} className='underline'>
-                                                    -  Orders
-                                                </p>
-                                                <p suppressHydrationWarning={true} onClick={() => hrefOnClick("/settings")} className='underline'>
+                                                <p suppressHydrationWarning={true} onClick={() => hrefOnClick("/account/settings")} className='underline'>
                                                     -  Settings
                                                 </p>
                                                 {userData ? userData?.isAdmin ? (
