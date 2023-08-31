@@ -11,6 +11,7 @@ import Link from "next/link"
 import { useToast } from "@/components/ui/use-toast"
 import useGlobalStore from "@/store/useGlobalStore"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     signup: boolean;
