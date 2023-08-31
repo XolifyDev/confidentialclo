@@ -1,6 +1,7 @@
 "use client";
 
 import { Icons } from '@/components/icons';
+import { config } from '@/config';
 import { getOrderBySession, getOrderProductsByOrderId } from '@/lib/actions/dbActions';
 import { getCheckoutSession } from '@/lib/checkout';
 import { OrderProducts, Orders, Products } from '@prisma/client';
@@ -9,10 +10,15 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect';
+import Stripe from 'stripe';
 
 interface OrderProductsExtended extends OrderProducts {
     product: Products
 }
+
+const stripe = new Stripe(config.stripe.clientSecret, {
+    apiVersion: "2022-11-15",
+});
 
 const CheckoutSuccess = () => {
     const router = useSearchParams();
@@ -23,13 +29,22 @@ const CheckoutSuccess = () => {
     const bottomRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         const getSession = async () => {
-            let s = await getCheckoutSession(sessionId);
-            console.log(s)
-            let o = await getOrderBySession(sessionId);
+            let o = await fetch('/api/orders/session', {
+                method: "GET",
+                headers: {
+                    "id": sessionId
+                }
+            }).then(res => res.json());
+            let s = await stripe.checkout.sessions.retrieve(o?.sessionId);
             setTimeout(async () => {
-                console.log(o)
+                // console.log(o)
 
-                let op = await getOrderProductsByOrderId(o.id)
+                let op = await fetch('/api/orders/orderproducts', {
+                    method: "GET",
+                    headers: {
+                        "id": o?.id!
+                    }
+                }).then(res => res.json());
                 setSession(s);
                 setOrder(o);
                 setOrderProducts(op);

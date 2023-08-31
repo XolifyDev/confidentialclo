@@ -87,6 +87,8 @@ model Orders {
   userId      String   @db.ObjectId
   sessionId   String
   status      String
+  address     String
+  discount    String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -121,4 +123,18 @@ model CheckoutSession {
   completed String
 
   // @@index([sessionId, id])
+}
+
+model Analytics {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  month  String
+  year   String
+  amount String
+}
+
+model PromoCodes {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  discount String
+  name     String
+  couponId String
 }

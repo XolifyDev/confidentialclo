@@ -12,6 +12,7 @@ import tailwindRn from "tailwind-rn";
 import { NextResponse } from "next/server";
 import { Readable } from "stream";
 import { headers } from "next/headers";
+import { emailer } from "@/lib/emailer";
 
 export const stripe = new Stripe(config1.stripe.clientSecret, {
   apiVersion: "2022-11-15",
@@ -70,6 +71,40 @@ export const POST = async (req: NextApiRequest) => {
           id: dbSession.id,
         },
       });
+      const firstOrder = await prisma.orders.findFirst({
+        where: {
+          sessionId: dbSession.id,
+        },
+      });
+      if (!firstOrder) return res.json(`No Checkout session...`);
+      await prisma.orders.update({
+        where: {
+          id: firstOrder.id,
+        },
+        data: {
+          address: `${
+            sessionFromStripe.data[0].shipping_details?.address || ""
+          }`,
+        },
+      });
+      const isMonthAndYear = await prisma.analytics.findFirst({
+        where: {
+          month: new Date().getMonth().toLocaleString(),
+          year: `${new Date().getFullYear()}`,
+        },
+      });
+      if (isMonthAndYear) {
+        await prisma.analytics.update({
+          where: {
+            id: isMonthAndYear.id,
+          },
+          data: {
+            amount: `${
+              Number(isMonthAndYear) + sessionFromStripe.data[0].amount_total!
+            }`,
+          },
+        });
+      }
       const user = await prisma.user.findFirst({
         where: {
           id: dbSession.userId,

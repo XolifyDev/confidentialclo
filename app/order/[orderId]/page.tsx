@@ -3,6 +3,7 @@ import { Icons } from '@/components/icons'
 import { Combobox } from '@/components/ui/Combobox'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { config } from '@/config';
 import { findUserByEmail, getOrderById, getOrderProductsByOrderId, updateStatus } from '@/lib/actions/dbActions'
 // import getCurrentUser from '@/lib/actions/getCurrentUser';
 import { getCheckoutSession } from '@/lib/checkout'
@@ -13,6 +14,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect';
+import Stripe from 'stripe';
 
 type props = {
     params: {
@@ -24,6 +26,10 @@ interface OrderProductsExtended extends OrderProducts {
     product: Products
 }
 
+const stripe = new Stripe(config.stripe.clientSecret, {
+    apiVersion: "2022-11-15",
+});
+
 const Page = ({ params }: props) => {
     // const router = useSearchParams();
     const [user, setUser] = useState<User | null>(null);
@@ -31,17 +37,28 @@ const Page = ({ params }: props) => {
     const [session, setSession] = useState<any>(null);
     const [value, setValue] = useState<any>("not_shipped");
     const [order, setOrder] = useState<Orders | null>(null);
-    const [orderProducts, setOrderProducts] = useState<OrderProductsExtended[] | null>(null);
+    const [orderProducts, setOrderProducts] = useState<OrderProductsExtended[]>([]);
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const userSession = useSession();
     useEffect(() => {
         const getSession = async () => {
             // console.log(s)
-            let o = await getOrderById(sessionId);
-            let s = await getCheckoutSession(o?.sessionId!);
+            let o = await fetch('/api/orders/id', {
+                method: "GET",
+                headers: {
+                    "id": sessionId
+                }
+            }).then(res => res.json());
+            let s = await stripe.checkout.sessions.retrieve(o?.sessionId);
             setTimeout(async () => {
                 // console.log(o)
-                let op = await getOrderProductsByOrderId(o?.id!)
+                let op = await fetch('/api/orders/orderproducts', {
+                    method: "GET",
+                    headers: {
+                        "id": o?.id!
+                    }
+                }).then(res => res.json());
+                console.log(op)
                 setSession(s);
                 setOrder(o);
                 setValue(o?.status || "not_shipped");

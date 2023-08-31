@@ -35,7 +35,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import { createCategory, findUserByEmail, getSiteSettings, updateSiteSettings } from "@/lib/actions/dbActions";
-import { MenuIcon, Plus, Settings, ShoppingBasket } from "lucide-react";
+import { MenuIcon, Plus, Settings, ShoppingBasket, TicketIcon } from "lucide-react";
 import Link from "next/link";
 import CategoriesTable from "./components/categories-table";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -45,6 +45,7 @@ import * as rdd from 'react-device-detect';
 import OrdersTable from "./components/orders-table";
 import UsersTable from "./components/users-table";
 import { User } from "@prisma/client";
+import PromosTable from "./components/promocodes-table";
 
 
 
@@ -59,6 +60,7 @@ export default function DashboardPage() {
     const params = useSearchParams();
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [showCateogryDialog, setShowCatDialog] = useState<boolean>(false);
+    const [showPromoDialog, setShowPromoDialog] = useState<boolean>(false);
     const [navbarMiddleImage, setNavbarMiddleImage] = useState<string>("");
     const [mainImageHome, setMainImageHome] = useState<string>("");
     const [mainImageDropLink, setMainImageDropLink] = useState<string>("");
@@ -71,6 +73,10 @@ export default function DashboardPage() {
         description: "",
         url: ""
     });
+    const [promoValues, setPromoValues] = useState<{ name: string, discountPercentage: number }>({
+        name: "",
+        discountPercentage: 0
+    });
     const session = useSession();
     const { toast } = useToast();
     const [tab, setSiteTab] = useState(params.get("tab") || "overview");
@@ -82,12 +88,16 @@ export default function DashboardPage() {
 
         const getUserData = async () => {
             if (!session.data?.user) return;
-            const user = await findUserByEmail({ email: session.data.user.email });
-            setUserData(user);
             setLoading2(false);
+            const user = await findUserByEmail({ email: session.data.user.email });
+            console.log(user)
+            if (!user?.isAdmin) router.push("/")
+            setUserData(user);
         }
         getUserData();
-        getSiteSettings().then((e: any) => {
+        fetch('/api/sitesettings', {
+            method: "GET"
+        }).then(res => res.json()).then(e => {
             setSiteSettings(e);
             setNavbarMiddleImage(e?.middleImage!);
             setMainImageDropLink(e.mainDropLink!);
@@ -96,18 +106,6 @@ export default function DashboardPage() {
             setTotalOrders(e?.totalOrders!);
         })
     }, [router, session])
-
-    useEffect(() => {
-        if (!loading2) return;
-
-        if (!userData) {
-            console.log('no user data');
-
-            return router.push("/")
-        }
-
-        if (!userData.isAdmin) return router.push("/");
-    }, [userData, router, loading2])
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -133,6 +131,30 @@ export default function DashboardPage() {
                 description: "Site Settings Updated",
                 variant: "default"
             })
+        })
+    }
+
+    const promoOnSubmit = (e: FormEvent) => {
+        console.log('promo')
+        e.preventDefault();
+        setLoading(true);
+
+        fetch('/api/admin/promos', {
+            method: "POST",
+            body: JSON.stringify(promoValues)
+        }).then(res => res.json()).then(e => {
+            if (e.error) {
+                toast({
+                    description: e.error.message,
+                    variant: "destructive"
+                });
+                setLoading(false);
+
+            } else {
+                setShowPromoDialog(false);
+                siteSettings.promoCodes + 1;
+                setLoading(false);
+            }
         })
     }
 
@@ -306,7 +328,7 @@ export default function DashboardPage() {
                                         <Overview />
                                     </CardContent>
                                 </Card>
-                                <Card className="col-span-3 mb-4">
+                                {/* <Card className="col-span-3 mb-4">
                                     <CardHeader>
                                         <CardTitle>Recent Sales</CardTitle>
                                         <CardDescription>
@@ -316,7 +338,7 @@ export default function DashboardPage() {
                                     <CardContent className="max-w-full overflow-x-auto">
                                         <RecentSales />
                                     </CardContent>
-                                </Card>
+                                </Card> */}
                             </div>
                         </>
                     ) : tab === "products" ? (
@@ -381,7 +403,8 @@ export default function DashboardPage() {
                     <Tabs defaultValue="overview" className="space-y-4">
                         <div className="flex w-full flex-row justify-between">
                             <TabsList defaultValue={tab}>
-                                <TabsTrigger value="overview">Overview</TabsTrigger>
+                                <TabsTrigger value="overview">Overview
+                                </TabsTrigger>
                                 <TabsTrigger value="orders">
                                     Orders
                                 </TabsTrigger>
@@ -502,7 +525,7 @@ export default function DashboardPage() {
                                         <Overview />
                                     </CardContent>
                                 </Card>
-                                <Card className="col-span-3">
+                                {/* <Card className="col-span-3">
                                     <CardHeader>
                                         <CardTitle>Recent Sales</CardTitle>
                                         <CardDescription>
@@ -512,7 +535,7 @@ export default function DashboardPage() {
                                     <CardContent>
                                         <RecentSales />
                                     </CardContent>
-                                </Card>
+                                </Card> */}
                             </div>
                         </TabsContent>
                         <TabsContent value="products" className="space-y-4">
@@ -529,6 +552,23 @@ export default function DashboardPage() {
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-2xl font-bold">{siteSettings.products ? siteSettings.products.length : "0"}</div>
+                                    </CardContent>
+                                </Card>
+                                <Card className="w-96">
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <CardTitle className="text-sm font-medium">
+                                            Promo Codes Counts
+                                        </CardTitle>
+                                        <TicketIcon fontSize={2} />
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex flex-row justify-between items-center w-full">
+                                            <div className="text-2xl font-bold">{siteSettings.promoCodes ? siteSettings.promoCodes.length : "0"}</div>
+                                            <Button value="sitesettings" onClick={() => setShowPromoDialog(true)} className="flex flex-row items-center gap-2">
+                                                Create a promo code
+                                                <Plus fontSize={25} fontWeight={600} />
+                                            </Button>
+                                        </div>
                                     </CardContent>
                                 </Card>
                                 <Card className="w-96">
@@ -551,6 +591,8 @@ export default function DashboardPage() {
                             </div>
                             <h1 className="border-b-black border-b-2 text-xl">Categories</h1>
                             <CategoriesTable />
+                            <h1 className="border-b-black border-b-2 text-xl">Promo Codes</h1>
+                            <PromosTable />
                         </TabsContent>
                         <TabsContent value="orders" className="space-y-4">
                             <OrdersTable />
@@ -687,6 +729,67 @@ export default function DashboardPage() {
                                 disabled={loading}
                                 type="button"
                                 variant="outline" onClick={() => setShowDialog(false)}>
+                                {loading && (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Cancel
+                            </Button>
+                            <Button
+                                disabled={loading}
+                                type="submit">
+                                {loading && (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Create</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Create a promo code</DialogTitle>
+                        {/* <DialogDescription>
+                            Add a new product to your store!
+                        </DialogDescription> */}
+                    </DialogHeader>
+                    <form encType="multipart/form-data" onSubmit={promoOnSubmit}>
+                        <div>
+                            <div className="space-y-4 py-2">
+                                <div className="flex flex-row space-x-2 justify-between">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="mid-image">Promo Name</Label>
+                                        <Input
+                                            disabled={loading}
+                                            required
+                                            value={promoValues.name}
+                                            onChange={(e: any) => setPromoValues({
+                                                ...promoValues,
+                                                name: e.target.value
+                                            })}
+                                            id="mid-image" placeholder="Waleed's promo code" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="">Promo Discount Percentage</Label>
+                                        <Input
+                                            type="number"
+                                            disabled={loading}
+                                            required
+                                            value={promoValues.discountPercentage}
+                                            onChange={(e: any) => setPromoValues({
+                                                ...promoValues,
+                                                discountPercentage: e.target.value
+                                            })}
+                                            id="cat-desc" placeholder="Find t-shirts of your liking!" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                disabled={loading}
+                                type="button"
+                                variant="outline" onClick={() => setShowPromoDialog(false)}>
                                 {loading && (
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                 )}

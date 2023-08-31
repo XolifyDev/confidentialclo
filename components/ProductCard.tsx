@@ -20,32 +20,32 @@ const ProductCard = ({
     let discount = 0;
     return (
         <div>
-            <div className="max-w-[350px] h-[30rem] p-4 mx-auto shadow-xl rounded-xl relative group">
+            <div suppressHydrationWarning={true} className="max-w-[350px] h-[30rem] p-4 mx-auto shadow-xl rounded-xl relative group">
                 {/* image div */}
-                <div className="h-64 block rounded overflow-hidden">
-                    <Link href={`/store/${category.url}/${product.url}`}>
-                        <Image src={product.mainImage} alt="bestseeling" height={300} width={300} />
+                <div suppressHydrationWarning={true} className="h-64 block rounded overflow-hidden">
+                    <Link suppressHydrationWarning={true} href={`/store/${category.url}/${product.url}`}>
+                        <Image suppressHydrationWarning={true} src={product.mainImage} alt="bestseeling" height={300} width={300} />
                     </Link>
                 </div>
 
                 {/* typography  */}
-                <div className="mt-4">
+                <div suppressHydrationWarning={true} className="mt-4">
                     {/* title && se murad h k agr title h to h2 wala code show kro */}
-                    {product.name && (
-                        <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-myblackhead line-clamp-1">
+                    {product.name ? (
+                        <h2 suppressHydrationWarning={true} className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-myblackhead line-clamp-1">
                             {product.name}
                         </h2>
-                    )}
+                    ) : null}
 
-                    {product.description && (
-                        <p className="mt-2 scroll-m-20 text-sm font-semibold tracking-tight text-myblackpara line-clamp-2">
+                    {product.description ? (
+                        <p suppressHydrationWarning={true} className="mt-2 scroll-m-20 text-sm font-semibold tracking-tight text-myblackpara line-clamp-2">
                             {product.description}
                         </p>
-                    )}
+                    ) : null}
 
-                    {product.price && (
-                        <div className="flex gap-3">
-                            <p
+                    {product.price ? (
+                        <div suppressHydrationWarning={true} className="flex gap-3">
+                            <p suppressHydrationWarning={true}
                                 className={`mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1 ${discount > 0 &&
                                     "line-through decoration-2 decoration-myorange/70"
                                     }`}
@@ -53,19 +53,19 @@ const ProductCard = ({
                                 ${product.price}
                             </p>
                             {/* discounted value */}
-                            {discount > 0 && (
-                                <p className="mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1">
+                            {discount > 0 ? (
+                                <p suppressHydrationWarning={true} className="mt-2 scroll-m-20 text-base font-semibold tracking-tight text-myblackhead line-clamp-1">
                                     {/* @ts-ignore */}
                                     ${product.price - (product.price * discount) / 100}
                                 </p>
-                            )}
+                            ) : null}
                         </div>
-                    )}
+                    ) : null}
                 </div>
 
                 {/* button div */}
-                <div className="mt-2">
-                    <div className=" absolute botton-2 right-2">
+                <div suppressHydrationWarning={true} className="mt-2">
+                    <div suppressHydrationWarning={true} className=" absolute botton-2 right-2">
                         {/* <BestSellAddToCart slug={slug} /> */}
                     </div>
                     {/* <Button className="group bg-myblackhead hover:bg-transparent text-mywhite hover:text-myblackhead scroll-m-20 text-xs font-semibold tracking-tight rounded-xl">
@@ -77,9 +77,9 @@ const ProductCard = ({
                         <Heart className="mr-2 h-4 w-4 group-hover:text-myorange duration-300" />
                         Buy Now
                     </Button> */}
-                    {discount > 0 && (
-                        <div className="scroll-m-20 text-xs text-mywhite bg-myorange font-semibold tracking-tight absolute top-0 left-2 w-[87px] p-2 text-center uppercase mydiscount">{`${discount}% OFF`}</div>
-                    )}
+                    {discount > 0 ? (
+                        <div suppressHydrationWarning={true} className="scroll-m-20 text-xs text-mywhite bg-myorange font-semibold tracking-tight absolute top-0 left-2 w-[87px] p-2 text-center uppercase mydiscount">{`${discount}% OFF`}</div>
+                    ) : null}
                 </div>
             </div>
         </div>

@@ -183,6 +183,8 @@ export const createCheckoutSession = async (
       status: "not_shipped",
       // user: userId,
       userId,
+      address: "",
+      discount: "",
     },
     include: {
       user: true,

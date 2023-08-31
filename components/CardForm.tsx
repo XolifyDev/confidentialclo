@@ -12,6 +12,9 @@ import useGlobalStore from "@/store/useGlobalStore";
 import { createCheckoutSession, getProductById } from "@/lib/actions/dbActions";
 import { Icons } from "./icons";
 import { useRouter } from "next/navigation";
+import { isMobile } from "react-device-detect";
+import { Input } from "./ui/input";
+import { useToast } from "./ui/use-toast";
 
 
 const useOptions = () => {
@@ -45,7 +48,16 @@ const CardForm = ({ user }: { user: User }) => {
     const options = useOptions();
     const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loading2, setLoading2] = useState(false);
     const [intent, setIntent] = useState<any>();
+    const { toast } = useToast();
+    const [discountCode, setDiscountCode] = useState<any>({
+        set: false,
+        code: "",
+        valid: true,
+        percentage: 0,
+        couponId: ""
+    });
     const { cart } = useGlobalStore();
     const router = useRouter();
     const appearance = {
@@ -169,75 +181,49 @@ const CardForm = ({ user }: { user: User }) => {
         // }
     };
 
+    const hrefOnClick = (url: string) => {
+        window.location.href = url;
+    }
+
+    const discountCheck = () => {
+        console.log('check', discountCode.code.length)
+        if (discountCode.code.length < 1) return;
+        setLoading2(true);
+        fetch('/api/admin/promos/check', {
+            method: "POST",
+            body: JSON.stringify({ code: discountCode.code })
+        }).then(res => res.json()).then(e => {
+            if (e.error) {
+                toast({
+                    description: e.error.message,
+                    variant: "destructive"
+                });
+                return setLoading2(false)
+            } else {
+                if (e.valid) {
+                    setDiscountCode({
+                        ...discountCode,
+                        percentage: e.discount.discount,
+                        couponId: e.discount.couponId,
+                        valid: true
+                    })
+                } else {
+                    setDiscountCode({
+                        ...discountCode,
+                        percentage: 0,
+                        couponId: "",
+                        valid: false
+                    })
+                }
+            }
+        })
+    }
+
     return (
         showForm ? (
             <form onSubmit={handleSubmit} className="mt-2 border-t-black border-t-2 pt-2">
                 <div className="max-h-50 overflow-y-auto">
-                    {/* Card details
-                    <CardNumberElement
-                        options={options}
-                        onReady={() => {
-                            console.log("CardElement [ready]");
-                        }}
-                        onChange={event => {
-                            console.log("CardElement [change]", event);
-                        }}
-                        onBlur={() => {
-                            console.log("CardElement [blur]");
-                        }}
-                        onFocus={() => {
-                            console.log("CardElement [focus]");
-                        }}
-                    />
-                    <CardCvcElement
-                        options={options}
-                        onReady={() => {
-                            console.log("CardElement [ready]");
-                        }}
-                        onChange={event => {
-                            console.log("CardElement [change]", event);
-                        }}
-                        onBlur={() => {
-                            console.log("CardElement [blur]");
-                        }}
-                        onFocus={() => {
-                            console.log("CardElement [focus]");
-                        }}
-                    />
-                    <AddressElement
-                        options={{
-                            ...options,
-                            mode: "shipping"
-                        }}
-                        onReady={() => {
-                            console.log("CardElement [ready]");
-                        }}
-                        onChange={event => {
-                            console.log("CardElement [change]", event);
-                        }}
-                        onBlur={() => {
-                            console.log("CardElement [blur]");
-                        }}
-                        onFocus={() => {
-                            console.log("CardElement [focus]");
-                        }}
-                    /> */}
-                    {/* <PaymentElement options={{
-                        defaultValues: {
-                            billingDetails: {
-                                email: user.email!,
-                                name: `${user.firstName} ${user.lastName}`,
-                                phone: user.phone_number!
-                            }
-                        },
-                        fields: {
-                            billingDetails: {
-                                email: "auto",
-                                name: "auto",
-                                phone: "auto",
-                            }
-                        }
-                    }} /> */}
+
                 </div>
                 <Button variant={'default'} className="w-full" type="submit" disabled={!stripe}>
                     Pay
@@ -255,8 +241,22 @@ const CardForm = ({ user }: { user: User }) => {
         ) : (
             <>
                 {/* <div onClick={() => { setShowForm(true) }} className="mt-6"> */}
-                <div onClick={onClick} className="mt-6">
-                    <Button disabled={loading} className="flex items-center justify-center rounded-md border border-transparent px-6 py-3 w-full text-base font-medium text-white shadow-sm">
+                <div className="mt-6">
+                    <div className="flex flex-row items-center mb-2 gap-1">
+                        <Input
+                            value={discountCode.code}
+                            onChange={(e) => setDiscountCode({
+                                ...discountCode,
+                                code: e.target.value
+                            })}
+                            placeholder="Discount Code"
+                            className={`${!discountCode.valid ? "border-red-500" : null}`}
+                        />
+                        <Button onClick={() => discountCheck()}>
+                            Check
+                        </Button>
+                    </div>
+                    <Button onClick={onClick} disabled={loading} className="flex items-center justify-center rounded-md border border-transparent px-6 py-3 w-full text-base font-medium text-white shadow-sm">
                         {loading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
@@ -267,10 +267,17 @@ const CardForm = ({ user }: { user: User }) => {
                 <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p className='flex flex-row gap-1'>
                         or
-                        <Link href={'/store'} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
-                            Continue Shopping
-                            <span aria-hidden="true"> &rarr;</span>
-                        </Link>
+                        {isMobile ? (
+                            <div onClick={() => hrefOnClick("/store")} className="font-medium text-indigo-600 hover:text-indigo-500">
+                                Continue Shopping
+                                <span aria-hidden="true"> &rarr;</span>
+                            </div>
+                        ) : (
+                            <Link href={'/store'} type="button" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                Continue Shopping
+                                <span aria-hidden="true"> &rarr;</span>
+                            </Link>
+                        )}
                     </p>
                 </div>
             </>

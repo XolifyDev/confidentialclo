@@ -42,24 +42,24 @@ const AddToCart = ({ product }: AddToCartProps) => {
 
     return (
         <>
-            <div className='flex flex-row items-center' suppressHydrationWarning>
+            <div suppressHydrationWarning={true} className='flex flex-row items-center'>
                 <DropdownMenu>
-                    <DropdownMenuTrigger className='w-full' asChild>
-                        <Button suppressHydrationWarning className='flex flex-row justify-between w-full' variant={'secondary'}>
+                    <DropdownMenuTrigger suppressHydrationWarning={true} className='w-full' asChild>
+                        <Button suppressHydrationWarning={true} className='flex flex-row justify-between w-full' variant={'secondary'}>
                             {value === "" ? "Select a size" : value}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown suppressHydrationWarning={true} className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align='center' suppressHydrationWarning>
+                    <DropdownMenuContent suppressHydrationWarning={true} align='center'>
                         {product.sizes.map((e: any) => (
-                            <DropdownMenuItem className='flex flex-row gap-1 items-center' key={e} onClick={() => setValue(e)} suppressHydrationWarning>
+                            <DropdownMenuItem suppressHydrationWarning={true} className='flex flex-row gap-1 items-center' key={e} onClick={() => setValue(e)}>
                                 {e === value ? <Check size={15} /> : null}
                                 {e}
                             </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <Button onClick={addToCart} className='py-0 h-10 w-4/5'>
+                <Button suppressHydrationWarning={true} onClick={addToCart} className='py-0 h-10 w-4/5'>
                     Add To Cart
                 </Button>
             </div >

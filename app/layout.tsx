@@ -11,6 +11,7 @@ import { DayPickerProvider } from 'react-day-picker';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from '@stripe/stripe-js';
 import * as rdd from 'react-device-detect';
+import { NextAuthProvider } from '@/lib/providers/NextAuthProvider'
 
 
 
@@ -36,12 +37,12 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </Head> */}
-      <body className={inter.className}>
-        <SessionProvider>
+      <body suppressHydrationWarning={true} className={inter.className}>
+        <NextAuthProvider>
           <Toaster />
           <Navbar />
           {children}
-        </SessionProvider>
+        </NextAuthProvider>
       </body>
     </html>
   )

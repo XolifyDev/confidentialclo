@@ -5,7 +5,8 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { config } from '@/config';
-import { getSiteSettings } from '@/lib/actions/dbActions';
+// import { getSiteSettings } from '@/lib/actions/dbActions';
+import { prisma } from '@/lib/db';
 import { Categories } from '@prisma/client';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { ArrowDown, ChevronDownIcon, ChevronUpIcon, ChevronsUpDown, Instagram, Star } from 'lucide-react';
@@ -16,22 +17,20 @@ import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
-
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
   const [categories, setCategories] = useState<Categories[]>([]);
   const [siteSettings, setSiteSettings] = useState<any>({})
 
   useEffect(() => {
-    getData();
-  }, [])
-
-  const getData = async () => {
-    getSiteSettings().then((e: any) => {
+    fetch('/api/sitesettings', {
+      method: "GET"
+    }).then(res => res.json()).then((e) => {
+      console.log(e)
       setSiteSettings(e);
       setCategories(e.categories);
     })
-  }
+  }, [])
 
   return (
     <>
