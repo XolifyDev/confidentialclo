@@ -66,7 +66,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
             signIn('credentials', {
                 email,
                 password,
-                redirect: false
+                redirect: false,
             }).then(async (callback) => {
                 console.log(callback)
                 if (callback?.error) {
@@ -158,7 +158,10 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
           </span>
         </div> */}
             </div>
-            <Button onClick={() => signIn("google")} variant="outline" type="button" disabled={isLoading}>
+            <Button onClick={() => signIn("google", {
+                callbackUrl: "/",
+                redirect: true
+            })} variant="outline" type="button" disabled={isLoading}>
                 {isLoading ? (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 ) : (

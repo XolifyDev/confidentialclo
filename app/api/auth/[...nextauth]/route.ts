@@ -52,6 +52,7 @@ const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: config1.google.clientId,
       clientSecret: config1.google.clientSecret,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   //   debug: process.env.NODE_ENV === "development",
