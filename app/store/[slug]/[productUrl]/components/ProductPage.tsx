@@ -35,7 +35,7 @@ import Image from 'next/image';
 //     ],
 // }
 
-function classNames(...classes) {
+function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
 
