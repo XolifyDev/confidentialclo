@@ -73,8 +73,12 @@ export function ProductsTable() {
     }, [])
 
     const getData = async () => {
-        setData(await getProducts());
-        setSiteSettings(await getSiteSettings());
+        fetch('/api/products').then(e => e.json()).then(e => {
+            setData(e.products);
+        })
+        fetch("/api/sitesettings").then(e => e.json()).then(e => {
+            setSiteSettings(e);
+        })
     };
 
     const columns = [

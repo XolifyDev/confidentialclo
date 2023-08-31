@@ -8,6 +8,7 @@ import { deleteCategory, getSiteSettings, getUsers } from '@/lib/actions/dbActio
 import { Categories, User } from '@prisma/client';
 import { ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { ArrowUpDown, Check, Ghost, MoreHorizontal, Shield, Trash } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 
@@ -15,14 +16,18 @@ const UsersTable = () => {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [data, setData] = React.useState<User[]>([]);
     const { toast } = useToast();
+    const session = useSession();
 
     useEffect(() => {
         getData();
     }, [])
 
     const getData = async () => {
-        getUsers().then((e: any) => {
-            setData(e)
+        fetch('/api/users', {
+            method: "GET"
+        }).then(res => res.json()).then(e => {
+            console.log(e)
+            setData(e.users)
             // console.log(e: any)
         })
     }
@@ -54,8 +59,9 @@ const UsersTable = () => {
                 )
             },
             cell: ({ row }: { row: any }) => {
+                console.log(row.original.name)
                 return <div className="ml-2">
-                    {!row.original.name ? `${row.original.user.firstName} ${row.original.user.lastName}` : row.orginal.name}
+                    {!row.original.name ? `${row.original.firstName} ${row.original.lastName}` : row.orginal?.name!}
                 </div>
             },
         },
@@ -130,7 +136,30 @@ const UsersTable = () => {
                                     <Trash height={20} color="red" />
                                 </DropdownMenuItem>
                             ) : (
-                                <DropdownMenuItem onClick={() => { }} className="cursor-pointer flex flex-row items-center gap-2">
+                                <DropdownMenuItem onClick={() => {
+                                    fetch('/api/admin/users/admin', {
+                                        method: "GET",
+                                        headers: {
+                                            "id": row.original.id,
+                                            "session": JSON.stringify(session)
+                                        }
+                                    }).then(res => res.json()).then(e => {
+                                        if (e.error) {
+                                            toast({
+                                                description: e.error.message,
+                                                variant: "destructive"
+                                            });
+                                            return;
+                                        } else {
+                                            toast({
+                                                description: 'User is now admin',
+                                                variant: "default"
+                                            });
+                                            row.original.isAdmin = true
+                                            return;
+                                        }
+                                    })
+                                }} className="cursor-pointer flex flex-row items-center gap-2">
                                     Make Admin
                                     <Shield />
                                 </DropdownMenuItem>

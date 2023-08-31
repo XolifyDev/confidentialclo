@@ -25,7 +25,9 @@ const OrdersTable = () => {
     }, [])
 
     const getData = async () => {
-        getOrdersWithUser().then((e: any) => {
+        fetch('/api/orders', {
+            method: "GET"
+        }).then(res => res.json()).then(e => {
             setData(e.orders);
         })
     }
