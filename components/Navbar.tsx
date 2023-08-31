@@ -125,13 +125,13 @@ export default function Navbar() {
                         </button>
                         <div suppressHydrationWarning={true} className="!visible hidden items-center lg:!flex lg:basis-auto" id="navbarSupportedContent1" data-te-collapse-item="">
                             <a suppressHydrationWarning={true} className="mr-2 mt-2 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mt-0" href="/">
-                                <Image suppressHydrationWarning={true} src="/favicon.png" width={40} height={40} className='h-[40px]' alt="" loading="lazy" />
+                                <Image suppressHydrationWarning={true} src="/favicon.png" width={100} height={100} className='h-[40px] w-[40px]' alt="" loading="lazy" />
                             </a>
                         </div>
 
                         <div suppressHydrationWarning={true} className="block border-0 bg-transparent hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:ring-0">
                             <a suppressHydrationWarning={true} className="mr-2 mt-2 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mt-0" href="/">
-                                <Image suppressHydrationWarning={true} src="/favicon.png" width={40} height={40} className='h-[40px]' alt="" loading="lazy" />
+                                <Image suppressHydrationWarning={true} src={siteSettings ? siteSettings?.middleImage : '/favicon.png'} width={100} height={100} className='h-[40px] w-[40px]' alt="" loading="lazy" />
                             </a>
                         </div>
 
