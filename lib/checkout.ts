@@ -60,6 +60,7 @@ export const checkout = async (items: Cart[]) => {
     shipping_address_collection: {
       allowed_countries: ["US"],
     },
+    allow_promotion_codes: true,
   });
 };
 
