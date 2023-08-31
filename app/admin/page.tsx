@@ -63,6 +63,7 @@ export default function DashboardPage() {
     const [showPromoDialog, setShowPromoDialog] = useState<boolean>(false);
     const [navbarMiddleImage, setNavbarMiddleImage] = useState<string>("");
     const [mainImageHome, setMainImageHome] = useState<string>("");
+    const [storeHomeImage, setMainStoreImage] = useState<string>("");
     const [mainImageDropLink, setMainImageDropLink] = useState<string>("");
     const [totalRevenue, setTotoalRevenue] = useState<string>("0");
     const [totalOrders, setTotalOrders] = useState<string>("0");
@@ -101,6 +102,7 @@ export default function DashboardPage() {
             setSiteSettings(e);
             setNavbarMiddleImage(e?.middleImage!);
             setMainImageDropLink(e.mainDropLink!);
+            setMainStoreImage(e?.storeHomeImage)
             setMainImageHome(e?.mainHomeImage!);
             setTotoalRevenue(e?.totalRevenue!);
             setTotalOrders(e?.totalOrders!);
@@ -118,7 +120,7 @@ export default function DashboardPage() {
             });
         }
 
-        updateSiteSettings({ middleImage: navbarMiddleImage, mainHomeImage: mainImageHome, mainDropLink: mainImageDropLink }).catch((e: any) => {
+        updateSiteSettings({ middleImage: navbarMiddleImage, mainHomeImage: mainImageHome, mainDropLink: mainImageDropLink, storeHomeImage }).catch((e: any) => {
             setLoading(false)
             return toast({
                 description: e,
@@ -636,6 +638,15 @@ export default function DashboardPage() {
                                         required
                                         value={mainImageHome}
                                         onChange={(e: any) => setMainImageHome(e.target.value)}
+                                        id="main-image" placeholder="Image LINK" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="main-image">Main Store Image</Label>
+                                    <Input
+                                        disabled={loading}
+                                        required
+                                        value={storeHomeImage}
+                                        onChange={(e: any) => setMainStoreImage(e.target.value)}
                                         id="main-image" placeholder="Image LINK" />
                                 </div>
                                 <div className="space-y-2">
