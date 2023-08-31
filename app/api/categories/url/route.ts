@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const url = headers().get("url");
+  console.log(url);
 
   if (!url) return NextResponse.json({ error: true });
 
@@ -12,6 +13,13 @@ export async function GET() {
       url,
     },
   });
+  if (!category)
+    return NextResponse.json({
+      error: {
+        message: "Invalid Category",
+      },
+    });
+  console.log(category);
   return NextResponse.json({
     category,
     products: await prisma.products.findMany({

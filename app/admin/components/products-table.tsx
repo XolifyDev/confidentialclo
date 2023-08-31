@@ -78,6 +78,7 @@ export function ProductsTable() {
         })
         fetch("/api/sitesettings").then(e => e.json()).then(e => {
             setSiteSettings(e);
+            console.log(e)
         })
     };
 

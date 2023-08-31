@@ -4,6 +4,7 @@ import SideBar from '@/components/SideBar';
 import { Icons } from '@/components/icons';
 import { getCategoryByUrl } from '@/lib/actions/dbActions';
 import { ArrowDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 interface IParams {
@@ -14,7 +15,7 @@ export default function Home({ params }: { params: IParams }) {
     const [info, setInfo] = useState<any>(null);
     const [domLoaded, setDomLoaded] = useState(false);
     const [siteSettings, setSiteSettings] = useState<any>({})
-
+    const router = useRouter();
     useEffect(() => {
         setDomLoaded(true);
     }, []);
@@ -28,15 +29,21 @@ export default function Home({ params }: { params: IParams }) {
         })
     }, [])
     useEffect(() => {
+        console.log(params)
+        if (!params.slug) return console.log('no slug');
         fetch('/api/categories/url', {
             method: "GET",
             headers: {
                 "url": params.slug
             }
         }).then(res => res.json()).then((e) => {
-            setInfo(e);
+            if (e.error) {
+                if (e.error.message === "Invalid Category") return router.push('/');
+            } else {
+                setInfo(e);
+            }
         })
-    }, [])
+    }, [params])
     return (
         <>
             {domLoaded && (

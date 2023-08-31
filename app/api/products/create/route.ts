@@ -92,6 +92,7 @@ export async function POST(req: NextApiRequest) {
       // @ts-ignore
       return e[1].checked === true ? e[1].name : null;
     });
+  // console.log(images);
   const newProduct = await prisma.products.create({
     data: {
       description,
@@ -99,7 +100,7 @@ export async function POST(req: NextApiRequest) {
       name,
       price,
       url,
-      gallery: images.split(", ").split(","),
+      gallery: images.split(", " || ","),
       sizes: sizes.split(", ").split(","),
       categories: categories,
     },
