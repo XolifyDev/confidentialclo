@@ -14,7 +14,7 @@ export async function GET() {
       url,
     },
   });
-  console.log(product);
+  console.log(product, "PRODUCTUTUTUTUTUUTUTUUTUTUTU");
   return NextResponse.json({
     product,
   });

@@ -35,6 +35,12 @@ export default function Home({ params }: { params: IParams }) {
     }, [])
     useEffect(() => {
         console.log(params)
+        if (siteSettings) {
+            if (siteSettings.products) {
+                console.log(siteSettings.products.filter((e: any) => e.url === params.productUrl))
+                setProduct(siteSettings.products.find((e: any) => e.url === params.productUrl) || null)
+            }
+        }
         fetch('/api/categories/url', {
             method: "GET",
             headers: {
@@ -44,20 +50,7 @@ export default function Home({ params }: { params: IParams }) {
         }).then(res => res.json()).then((e) => {
             setInfo(e);
         })
-
-        if (params.productUrl) {
-            fetch('/api/products/url', {
-                method: "GET",
-                headers: {
-                    "url": params.productUrl
-                },
-                cache: "no-cache",
-            }).then(res => res.json()).then((e) => {
-                console.log(e)
-                setProduct(e.product);
-            })
-        }
-    }, [params])
+    }, [params, siteSettings])
     return (
         <>
             {domLoaded ? (
@@ -83,7 +76,7 @@ export default function Home({ params }: { params: IParams }) {
                     </main>
                 </>
             ) : (
-                <Icons.spinner suppressHydrationWarning={true} className="m-auto h-20 w-20 ml-[29.5vw] animate-spin" />
+                <Icons.spinner suppressHydrationWarning={true} className="m-auto h-20 w-20 ml-[30.5vw] animate-spin" />
             )}
         </>
     )
