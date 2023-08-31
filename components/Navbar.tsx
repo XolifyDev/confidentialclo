@@ -58,7 +58,8 @@ export default function Navbar() {
                     method: "GET",
                     headers: {
                         "id": e.productId
-                    }
+                    },
+                    cache: "no-store"
                 }).then(res => res.json());
                 const productPrice = Number(product?.price);
                 price = price + productPrice;
@@ -76,7 +77,8 @@ export default function Navbar() {
             const user = await findUserByEmail({ email: session.data.user.email });
             // @ts-ignore
             setSiteSettings(await fetch('/api/sitesettings', {
-                method: "GET"
+                method: "GET",
+                cache: "no-store"
             }).then(res => res.json()));
             // console.log(`${!userData?.name ? `${userData?.firstName && userData?.firstName.charAt(0) || ""} ${userData?.lastName && userData?.lastName.charAt(0) || ""}` : `${userData?.name && userData?.name.split(" ")[0].charAt(0)} ${userData?.name && userData?.name.split(" ")[1].charAt(0)}`}`)
             setUserData(user);
