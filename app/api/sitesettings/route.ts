@@ -2,10 +2,12 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+  const products = await prisma.products.findMany();
+  const categories = await prisma.categories.findMany();
   return NextResponse.json({
     ...(await prisma.siteSettings.findFirst()),
-    products: await prisma.products.findMany(),
-    categories: await prisma.categories.findMany(),
+    products,
+    categories,
     promoCodes: await prisma.promoCodes.findMany(),
   });
 }

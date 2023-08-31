@@ -451,7 +451,7 @@ export function ProductsTable() {
                                 <Input id="name"
                                     disabled={loading}
                                     required
-                                    value={imgsSrc} onChange={(e: any) => setImgsSrc(e.target.value)} placeholder="xl, lg, sm" />
+                                    value={imgsSrc} onChange={(e: any) => setImgsSrc(e.target.value)} placeholder="Url" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="images">Product Images (Seperate with commas)</Label>
