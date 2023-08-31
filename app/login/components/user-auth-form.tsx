@@ -68,6 +68,7 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                 password,
                 redirect: false
             }).then(async (callback) => {
+                console.log(callback)
                 if (callback?.error) {
                     return toast({
                         description: callback.error
