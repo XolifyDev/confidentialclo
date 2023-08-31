@@ -1,6 +1,6 @@
 "use client";
 import { Icons } from '@/components/icons';
-import { findUserByEmail } from '@/lib/actions/dbActions';
+import { findUserByEmail, updateUser } from '@/lib/actions/dbActions';
 import { User } from '@prisma/client';
 import { ArrowDown } from 'lucide-react'
 import { useSession } from 'next-auth/react';
@@ -53,6 +53,12 @@ const Page = () => {
         setAvatarSource(file ? URL.createObjectURL(file) : avatarSource);
         setAvatarFile(file || undefined);
     };
+
+    const onClick = async () => {
+        updateUser({
+            
+        })
+    }
     return (
         <>
             {session.status !== "unauthenticated" && user ? (

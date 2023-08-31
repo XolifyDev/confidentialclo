@@ -281,3 +281,14 @@ export const getOrdersWithUser = async () => {
 export const getUsers = async () => {
   return await prisma.user.findMany();
 };
+
+export const updateUser = async (args: any, id: string) => {
+  return await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      ...args,
+    },
+  });
+};
