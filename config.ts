@@ -3,7 +3,7 @@ export const config = {
     name: "Confidential Clothing",
     description: "Clothing Brand",
     instagram: "https://www.instagram.com/confidentialclo/",
-    domain: "https://confidentialclo.com",
+    domain: "https://www.confidentialclo.com",
   },
 
   stripe: {
