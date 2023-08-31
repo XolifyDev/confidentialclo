@@ -59,8 +59,8 @@ export default function Home() {
                   <Image
                     src={siteSettings.storeHomeImage ? siteSettings.storeHomeImage : "https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png"}
                     alt='Store Image'
-                    width={1000}
-                    height={1000}
+                    width={500}
+                    height={2000}
                     className={`${isMobile ? "max-w-xs" : "max-w-[3068px]"} w-[65rem]`}
                     loading='eager'
                   />
