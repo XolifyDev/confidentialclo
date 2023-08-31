@@ -75,13 +75,13 @@ export function ProductsTable() {
     const getData = async () => {
         fetch('/api/products', {
             method: "GET",
-            cache: "no-store"
+            cache: "no-cache",
         }).then(e => e.json()).then(e => {
             setData(e.products);
         })
         fetch("/api/sitesettings", {
             method: "GET",
-            cache: "no-store"
+            cache: "no-cache",
         }).then(e => e.json()).then(e => {
             setSiteSettings(e);
             console.log(e)

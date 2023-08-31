@@ -23,7 +23,7 @@ const CategoriesTable = () => {
     const getData = async () => {
         fetch('/api/sitesettings', {
             method: "GET",
-            cache: "no-store"
+            cache: "no-cache",
         }).then(res => res.json()).then(e => {
             setData(e.categories);
         })

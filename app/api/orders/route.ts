@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { Orders, User } from "@prisma/client";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic'
+
 interface OrderNewInterface extends Orders {
   user: User;
 }

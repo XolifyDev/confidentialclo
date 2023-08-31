@@ -27,7 +27,7 @@ const OrdersTable = () => {
     const getData = async () => {
         fetch('/api/orders', {
             method: "GET",
-            cache: "no-store"
+            cache: "no-cache",
         }).then(res => res.json()).then(e => {
             setData(e.orders);
         })

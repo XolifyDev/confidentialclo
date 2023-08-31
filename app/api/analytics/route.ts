@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import dayjs from "dayjs";
+
+export const dynamic = "force-dynamic";
+
 function getMonthName(monthNumber: number) {
   const date = new Date("July 20, 69 00:20:18");
   date.setMonth(monthNumber);

@@ -26,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/sitesettings', {
       method: "GET",
-      cache: "no-store"
+      cache: "no-cache",
     }).then(res => res.json()).then((e) => {
       console.log(e)
       setSiteSettings(e);

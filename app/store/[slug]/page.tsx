@@ -22,7 +22,7 @@ export default function Home({ params }: { params: IParams }) {
     useEffect(() => {
         fetch('/api/sitesettings', {
             method: "GET",
-            cache: "no-store"
+            cache: "no-cache",
         }).then(res => res.json()).then((e) => {
             // console.log(e)
             setSiteSettings(e);
@@ -37,7 +37,7 @@ export default function Home({ params }: { params: IParams }) {
             headers: {
                 "url": params.slug
             },
-            cache: "no-store"
+            cache: "no-cache",
         }).then(res => res.json()).then((e) => {
             if (e.error) {
                 if (e.error.message === "Invalid Category") return router.push('/');
