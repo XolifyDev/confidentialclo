@@ -83,11 +83,11 @@ export const createCategory = async ({
 };
 
 export const deleteProduct = async (id: string) => {
-  if (!id) return { error: { message: "ID is not defined" } };
+  if (!id) return { error: { message: "URL is not defined" } };
   console.log("searchgin for product");
   const product = await prisma.products.findFirst({
     where: {
-      id,
+      url: id,
     },
   });
 
@@ -96,7 +96,7 @@ export const deleteProduct = async (id: string) => {
 
   await prisma.products.delete({
     where: {
-      id,
+      id: product.id,
     },
   });
   console.log("product deleted");

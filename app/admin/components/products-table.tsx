@@ -151,7 +151,8 @@ export function ProductsTable() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right">
                             <DropdownMenuItem onClick={async () => {
-                                const product = await deleteProduct(row.original.id);
+                                console.log(row)
+                                const product = await deleteProduct(row.original.url);
                                 console.log(product);
                                 // @ts-ignore
                                 if (product.error) {
