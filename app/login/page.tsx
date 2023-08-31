@@ -71,7 +71,7 @@ export default function AuthenticationPage() {
                         </blockquote>
                     </div>
                 </div>
-
+                <UserAuthForm signup={false} />
             </div>
 
             {isMobile ? (
