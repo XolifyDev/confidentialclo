@@ -56,13 +56,13 @@ export default function Home() {
                 <Link
                   href={siteSettings.mainDropLink ? siteSettings.mainDropLink : "/"}
                 >
-                  <Image
-                    src={siteSettings.storeHomeImage ? siteSettings.storeHomeImage : "https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png"}
-                    alt='Store Image'
-                    width={500}
-                    height={2000}
-                    className={`${isMobile ? "max-w-xs" : "max-w-[3068px]"} w-[65rem]`}
-                    loading='eager'
+                  <div
+                    style={{ backgroundRepeat: "no-repeat", backgroundSize: "cover", contain: "size", backgroundPosition: "center", backgroundImage: `url(${siteSettings.storeHomeImage ? siteSettings.storeHomeImage : "https://cdn.xolify.store/u/xolifycdn/Qw2twXczYX.png"})` }}
+                    // alt='Store Image'
+                    // width={100}
+                    // height={500}
+                    className={`${isMobile ? "max-w-xs" : "max-w-[3068px]"} w-[40rem] h-[65rem]`}
+                  // loading='eager'
                   />
                 </Link>
               </div>
