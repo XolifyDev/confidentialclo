@@ -6,7 +6,7 @@ import { getCategoryByUrl } from '@/lib/actions/dbActions';
 import { ArrowDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { isMobile, isMobileSafari } from 'react-device-detect';
 interface IParams {
     slug: string;
 }
