@@ -82,7 +82,7 @@ export default function AuthenticationPage() {
                 Enter your email below to create your account
               </p> */}
                         </div>
-                        <UserAuthForm signup={true} />
+                        <UserAuthForm signup={false} />
                         {/* <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{" "}
               <Link
