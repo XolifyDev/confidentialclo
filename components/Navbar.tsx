@@ -384,7 +384,7 @@ export default function Navbar() {
                                     Cart
                                 </h1>
                                 {/* <div className="border-b border-black h-1 w-[95%]" /> */}
-                                <div className={`flex flex-row w-full py-2 ${isMobileSafari ? “max-h-24” : “max-h-36”} overflow-y-auto`}>
+                                <div className={`flex flex-row w-full py-2 ${isMobileSafari ? "max-h-24" : "max-h-36"} overflow-y-auto`}>
                                     {cart.map((cartItem) => (
                                         <CartItem key={cartItem.id} cartItem={cartItem} />
                                     ))}
