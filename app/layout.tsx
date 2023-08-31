@@ -10,7 +10,6 @@ import { SessionProvider } from 'next-auth/react';
 import { DayPickerProvider } from 'react-day-picker';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from '@stripe/stripe-js';
-import * as rdd from 'react-device-detect';
 import { NextAuthProvider } from '@/lib/providers/NextAuthProvider'
 
 
