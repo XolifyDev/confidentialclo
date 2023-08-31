@@ -82,7 +82,7 @@ const OrdersTable = () => {
             },
             cell: ({ row }: { row: any }) => {
                 return <div className="ml-2">
-                    <Link target='_blank' className='text-blue-500 hover:underline transition-all' href={`/orders/${row.original.id}`}>
+                    <Link target='_blank' className='text-blue-500 hover:underline transition-all' href={`/order/${row.original.id}`}>
                         View Order
                     </Link>
                 </div>
