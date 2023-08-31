@@ -242,7 +242,7 @@ const CardForm = ({ user }: { user: User }) => {
             <>
                 {/* <div onClick={() => { setShowForm(true) }} className="mt-6"> */}
                 <div className="mt-6">
-                    <div className="flex flex-row items-center mb-2 gap-1">
+                    {/* <div className="flex flex-row items-center mb-2 gap-1">
                         <Input
                             value={discountCode.code}
                             onChange={(e) => setDiscountCode({
@@ -255,7 +255,7 @@ const CardForm = ({ user }: { user: User }) => {
                         <Button onClick={() => discountCheck()}>
                             Check
                         </Button>
-                    </div>
+                    </div> */}
                     <Button onClick={onClick} disabled={loading} className="flex items-center justify-center rounded-md border border-transparent px-6 py-3 w-full text-base font-medium text-white shadow-sm">
                         {loading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

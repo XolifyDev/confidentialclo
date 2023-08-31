@@ -66,7 +66,7 @@ export default function Home({ params }: { params: IParams }) {
                                 <SideBar />
                                 <div suppressHydrationWarning={true} className="flex flex-col w-full border-t-[#d0cdcd] border-t-2 pt-5">
                                     <h1 suppressHydrationWarning={true} className='text-xl'>{info.category?.name}</h1>
-                                    <div suppressHydrationWarning={true} className="flex flex-row gap-3">
+                                    <div suppressHydrationWarning={true} className="flex flex-row gap-3 flex-wrap max-w-full">
                                         {info.products.map((product: any) => (
                                             <ProductCard
                                                 category={info.category!}
