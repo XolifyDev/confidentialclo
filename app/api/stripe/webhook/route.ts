@@ -41,6 +41,7 @@ export const POST = async (req: NextApiRequest) => {
     config1.stripe.webhookSecret
   );
   // console.log(buf.customer_details, "EVENT");
+  console.log(event);
   switch (event.type) {
     case "payment_intent.succeeded":
       const paymentIntentSucceeded = event.data.object as {
@@ -51,6 +52,7 @@ export const POST = async (req: NextApiRequest) => {
       const sessionFromStripe = await stripe.checkout.sessions.list({
         payment_intent: event.data.object.id,
       });
+      console.log(sessionFromStripe);
       // console.log(sessionFromStripe);
       if (!sessionFromStripe) return res.json(`No Checkout session...`);
       const dbSession = await prisma.checkoutSession.findFirst({

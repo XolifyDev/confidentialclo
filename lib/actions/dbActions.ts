@@ -177,6 +177,7 @@ export const createCheckoutSession = async (
       completed: "false",
     },
   });
+  console.log(session, "SESSION");
   const order = await prisma.orders.create({
     data: {
       sessionId: id,
@@ -190,6 +191,7 @@ export const createCheckoutSession = async (
       user: true,
     },
   });
+  console.log(order, "ORDER");
 
   items.forEach(async (e: any) => {
     await prisma.orderProducts.create({
