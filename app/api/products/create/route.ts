@@ -101,7 +101,7 @@ export async function POST(req: NextApiRequest) {
       price,
       url,
       gallery: images.split(", " || ","),
-      sizes: sizes.split(", ").split(","),
+      sizes: sizes.split(", " || ","),
       categories: categories,
     },
   });
