@@ -64,7 +64,7 @@ export default function Navbar() {
                 price = price + productPrice;
                 // }, 600)
             }
-            console.log(price)
+            // console.log(price)
             setTotalCost(price)
         }
         setStuff()
@@ -110,8 +110,6 @@ export default function Navbar() {
         setShowMobileMenu(false);
         router.push(url);
     }
-
-    console.log(cart.length)
 
     return (
         <>
@@ -406,8 +404,7 @@ export default function Navbar() {
                         </div>
                     )}
                 </nav >
-            )
-            }
+            )}
         </>
     )
 }
