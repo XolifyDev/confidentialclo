@@ -16,17 +16,17 @@ export default function Home({ params }: { params: IParams }) {
     const [siteSettings, setSiteSettings] = useState<any>({})
 
     useEffect(() => {
+        setDomLoaded(true);
+    }, []);
+    useEffect(() => {
         fetch('/api/sitesettings', {
             method: "GET"
         }).then(res => res.json()).then((e) => {
-            console.log(e)
+            // console.log(e)
             setSiteSettings(e);
             // setCategories(e.categories);
         })
-    })
-    useEffect(() => {
-        setDomLoaded(true);
-    }, []);
+    }, [])
     useEffect(() => {
         fetch('/api/categories/url', {
             method: "GET",

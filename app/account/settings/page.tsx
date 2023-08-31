@@ -26,11 +26,11 @@ const Page = () => {
         fetch('/api/sitesettings', {
             method: "GET"
         }).then(res => res.json()).then((e) => {
-            console.log(e)
+            // console.log(e)
             setSiteSettings(e);
             // setCategories(e.categories);
         })
-    })
+    }, [])
     useEffect(() => {
         if (session.status === "loading") return;
         const getUserData = async () => {

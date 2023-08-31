@@ -15,15 +15,14 @@ const SideBar = () => {
     const [siteSettings, setSiteSettings] = useState<any>({})
 
     useEffect(() => {
-        getData();
-    }, [])
-
-    const getData = async () => {
-        getSiteSettings().then((e: any) => {
+        fetch('/api/sitesettings', {
+            method: "GET"
+        }).then(res => res.json()).then((e) => {
+            // console.log(e)
             setSiteSettings(e);
             setCategories(e.categories);
         })
-    }
+    }, [])
 
     return (
         <div className="flex flex-col gap-2 w-[20rem]">
