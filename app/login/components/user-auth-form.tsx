@@ -76,9 +76,6 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                 }
                 if (callback?.ok && !callback?.error) {
                     const newData = await findUserByEmail({ email });
-                    toast({
-                        description: `Welcome back ${newData?.firstName}!`
-                    });
                     setUser({
                         email: newData?.email,
                         email_subscribed: newData?.email_subscribed,
@@ -89,6 +86,10 @@ export function UserAuthForm({ className, signup, ...props }: UserAuthFormProps)
                     });
                     // setIsLoading(false)
                     router.push('/')
+                    setIsLoading(true)
+                    toast({
+                        description: `Welcome back ${newData?.firstName}!`
+                    });
                 }
             })
                 .finally(() => setIsLoading(false));
