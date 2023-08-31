@@ -31,7 +31,8 @@ const CheckoutSuccess = () => {
 
     useEffect(() => {
         fetch('/api/sitesettings', {
-            method: "GET"
+            method: "GET",
+            cache: "no-store"
         }).then(res => res.json()).then((e) => {
             // console.log(e)
             setSiteSettings(e);
@@ -44,7 +45,8 @@ const CheckoutSuccess = () => {
                 method: "GET",
                 headers: {
                     "id": sessionId
-                }
+                },
+                cache: "no-store"
             }).then(res => res.json());
             let s = await stripe.checkout.sessions.retrieve(o?.sessionId);
             setTimeout(async () => {
@@ -54,7 +56,8 @@ const CheckoutSuccess = () => {
                     method: "GET",
                     headers: {
                         "id": o?.id!
-                    }
+                    },
+                    cache: "no-store"
                 }).then(res => res.json());
                 setSession(s);
                 setOrder(o);

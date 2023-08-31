@@ -25,7 +25,8 @@ export default function Home({ params }: { params: IParams }) {
     }, [])
     useEffect(() => {
         fetch('/api/sitesettings', {
-            method: "GET"
+            method: "GET",
+            cache: "no-store"
         }).then(res => res.json()).then((e) => {
             // console.log(e)
             setSiteSettings(e);
@@ -33,22 +34,29 @@ export default function Home({ params }: { params: IParams }) {
         })
     }, [])
     useEffect(() => {
+        console.log(params)
         fetch('/api/categories/url', {
             method: "GET",
             headers: {
                 "url": params.slug
-            }
+            },
+            cache: "no-store"
         }).then(res => res.json()).then((e) => {
             setInfo(e);
         })
-        fetch('/api/products/url', {
-            method: "GET",
-            headers: {
-                "url": params.productUrl
-            }
-        }).then(res => res.json()).then((e) => {
-            setProduct(e);
-        })
+
+        if (params.productUrl) {
+            fetch('/api/products/url', {
+                method: "GET",
+                headers: {
+                    "url": params.productUrl
+                },
+                cache: "no-store"
+            }).then(res => res.json()).then((e) => {
+                console.log(e)
+                setProduct(e.product);
+            })
+        }
     }, [params])
     return (
         <>

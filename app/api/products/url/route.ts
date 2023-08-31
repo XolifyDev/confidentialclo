@@ -6,12 +6,14 @@ export async function GET() {
   const url = headers().get("url");
 
   if (!url) return NextResponse.json({ error: true });
-
+  // console.log(url);
+  const product = await prisma.products.findFirst({
+    where: {
+      url,
+    },
+  });
+  console.log(product);
   return NextResponse.json({
-    ...(await prisma.products.findFirst({
-      where: {
-        url,
-      },
-    })),
+    product,
   });
 }

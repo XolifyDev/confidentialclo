@@ -21,7 +21,10 @@ const CategoriesTable = () => {
     }, [])
 
     const getData = async () => {
-        getSiteSettings().then((e: any) => {
+        fetch('/api/sitesettings', {
+            method: "GET",
+            cache: "no-store"
+        }).then(res => res.json()).then(e => {
             setData(e.categories);
         })
     }

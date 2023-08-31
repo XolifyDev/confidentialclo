@@ -24,7 +24,8 @@ const UsersTable = () => {
 
     const getData = async () => {
         fetch('/api/users', {
-            method: "GET"
+            method: "GET",
+            cache: "no-store"
         }).then(res => res.json()).then(e => {
             console.log(e)
             setData(e.users)
