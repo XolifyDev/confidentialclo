@@ -8,16 +8,13 @@ export async function GET(req: any) {
   const id = headers().get("id");
 
   if (!id) return NextResponse.json({ error: true });
-  const products = await prisma.orderProducts.findMany({
+  const orders = await prisma.orders.findMany({
     where: {
-      orderId: id,
-    },
-    include: {
-      product: true,
+      userId: id,
     },
   });
   //   console.log(products);
   return NextResponse.json({
-    products,
+    orders,
   });
 }

@@ -2,7 +2,7 @@
 
 import { Icons } from '@/components/icons';
 import { config } from '@/config';
-import { getOrderBySession, getOrderProductsByOrderId } from '@/lib/actions/dbActions';
+import { getOrderBySession, getOrderProductsByOrderId, updateSessionAndSendEmail } from '@/lib/actions/dbActions';
 import { getCheckoutSession } from '@/lib/checkout';
 import { OrderProducts, Orders, Products } from '@prisma/client';
 import { ArrowDown } from 'lucide-react';
@@ -52,16 +52,18 @@ const CheckoutSuccess = () => {
                 cache: "no-cache",
             }).then(res => res.json());
             let s = await stripe.checkout.sessions.retrieve(o?.sessionId);
+            updateSessionAndSendEmail(s);
             setTimeout(async () => {
                 // console.log(o)
 
                 let op = await fetch('/api/orders/orderproducts', {
                     method: "GET",
                     headers: {
-                        "id": o?.id!    
+                        "id": o?.id!
                     },
                     cache: "no-cache",
                 }).then(res => res.json());
+
                 setSession(s);
                 setOrder(o);
                 setOrderProducts(op.products);
