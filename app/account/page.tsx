@@ -41,16 +41,16 @@ const Page = () => {
             // setCategories(e.categories);
         })
     }, [])
-    // useEffect(() => {
-    //     if (session.status === "loading") return;
-    //     const getUserData = async () => {
-    //         // console.log(session)
-    //         if (session.status === "unauthenticated") return console.log('user not logged un');
-    //         const user = await findUserByEmail({ email: session.data.user.email });
-    //         setUser(user);
-    //     }
-    //     getUserData();
-    // }, [session])
+    useEffect(() => {
+        if (session.status === "loading") return;
+        const getUserData = async () => {
+            // console.log(session)
+            if (session.status === "unauthenticated") return console.log('user not logged un');
+            const user = await findUserByEmail({ email: session.data.user.email });
+            setUser(user);
+        }
+        getUserData();
+    }, [session])
     useEffect(() => {
         SetDomLoaded(true)
     }, [])
