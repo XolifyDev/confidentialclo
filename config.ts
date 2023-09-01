@@ -3,6 +3,7 @@ export const config = {
     name: "Confidential Clothing",
     description: "Clothing Brand",
     instagram: "https://www.instagram.com/confidentialclo/",
+    tiktok: "https://www.tiktok.com/@confidentialclo",
     domain: "https://www.confidentialclo.com",
   },
 
