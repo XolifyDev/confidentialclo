@@ -68,7 +68,7 @@ export default function Navbar() {
             // console.log(price)
             setTotalCost(price)
         }
-        setStuff()
+        setStuff();
     }, [cartStore])
 
     useEffect(() => {

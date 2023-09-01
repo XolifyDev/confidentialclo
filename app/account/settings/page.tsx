@@ -1,5 +1,6 @@
 "use client";
 import { Icons } from '@/components/icons';
+import { useToast } from '@/components/ui/use-toast';
 import { findUserByEmail, updateUser } from '@/lib/actions/dbActions';
 import { User } from '@prisma/client';
 import { ArrowDown } from 'lucide-react'
@@ -20,7 +21,8 @@ const Page = () => {
     );
     const [avatarFile, setAvatarFile] = useState<File>();
     const session = useSession();
-    const [siteSettings, setSiteSettings] = useState<any>({})
+    const [siteSettings, setSiteSettings] = useState<any>({});
+    const { toast } = useToast();
 
     useEffect(() => {
         fetch('/api/sitesettings', {
@@ -55,9 +57,13 @@ const Page = () => {
     };
 
     const onClick = async () => {
+        if (!user) return toast({
+            description: "Looks like there was an error. Please re-load",
+            variant: "destructive"
+        });
         updateUser({
-
-        })
+            ...user
+        }, user.id)
     }
     return (
         <>
@@ -181,7 +187,7 @@ const Page = () => {
                                     </p>
                                     <div className="mt-10 space-y-10">
                                         <fieldset>
-                                            <div className="mt-6 space-y-6">
+                                            <div className="mt-2 space-y-6">
                                                 <div className="relative flex gap-x-3">
                                                     <div className="flex h-6 items-center">
                                                         <input
@@ -211,12 +217,7 @@ const Page = () => {
                             <div className="mt-6 flex items-center justify-end gap-x-6">
                                 <button
                                     type="button"
-                                    className="text-sm font-semibold leading-6 text-gray-900"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
+                                    onClick={onClick}
                                     className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
                                     Save
