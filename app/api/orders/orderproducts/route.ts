@@ -10,7 +10,7 @@ export async function GET(req: any) {
   if (!id) return NextResponse.json({ error: true });
   const products = await prisma.orderProducts.findMany({
     where: {
-      id,
+      orderId: id,
     },
     include: {
       product: true,
@@ -18,6 +18,6 @@ export async function GET(req: any) {
   });
   console.log(products);
   return NextResponse.json({
-    ...products,
+    products,
   });
 }

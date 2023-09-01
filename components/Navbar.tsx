@@ -308,7 +308,7 @@ export default function Navbar() {
                         )}
                     </div>
                     {showMobileMenu && (
-                        <div suppressHydrationWarning={true} className={`custom_fadeIn fixed w-full h-[100vh] bottom-0 right-0 bg-[#eee8e8] z-[9999] top-0 ${isMobileSafari ? "-mt-4" : null} flex flex-col py-1 px-2`}>
+                        <div suppressHydrationWarning={true} className={`custom_fadeIn fixed w-full h-[110vh] bottom-0 right-0 bg-[#eee8e8] z-[9999] top-0 ${isMobileSafari ? "-mt-4" : null} flex flex-col py-1 px-2`}>
                             <div suppressHydrationWarning={true} className="flex flex-row w-[23rem] justify-between items-center">
                                 <Image
                                     suppressHydrationWarning={true}
