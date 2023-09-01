@@ -46,28 +46,29 @@ export default function Navbar() {
         setDomLoaded(true);
     }, []);
 
+    const setStuff = async () => {
+        let price = 0;
+        for (let i = 0; i < cartStore.length; i++) {
+            // setTimeout(async () => {
+            const e = cartStore[i];
+            const product = await fetch('/api/products/id', {
+                method: "GET",
+                headers: {
+                    "id": e.productId
+                },
+                cache: "no-cache",
+            }).then(res => res.json());
+            const productPrice = Number(product?.price);
+            price = price + productPrice;
+            // }, 600)
+        }
+        // console.log(price)
+        setTotalCost(price)
+        setCart(cartStore);
+    }
+
     useEffect(() => {
         setCart(cartStore);
-
-        const setStuff = async () => {
-            let price = 0;
-            for (let i = 0; i < cartStore.length; i++) {
-                // setTimeout(async () => {
-                const e = cartStore[i];
-                const product = await fetch('/api/products/id', {
-                    method: "GET",
-                    headers: {
-                        "id": e.productId
-                    },
-                    cache: "no-cache",
-                }).then(res => res.json());
-                const productPrice = Number(product?.price);
-                price = price + productPrice;
-                // }, 600)
-            }
-            // console.log(price)
-            setTotalCost(price)
-        }
         setStuff();
     }, [cartStore])
 
@@ -206,7 +207,7 @@ export default function Navbar() {
                                                                             <p suppressHydrationWarning={true} className="text-gray-500">Size {cartItem.size}</p>
 
                                                                             <div suppressHydrationWarning={true} className="flex">
-                                                                                <button onClick={() => removeItemFromCart(cartItem.id)} suppressHydrationWarning={true} type="button"
+                                                                                <button onClick={() => { removeItemFromCart(cartItem.id); setStuff() }} suppressHydrationWarning={true} type="button"
                                                                                     className="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
                                                                             </div>
                                                                         </div>
@@ -379,7 +380,7 @@ export default function Navbar() {
                                     {/* <div className="border-b border-black h-1 w-[95%]" /> */}
                                     <div className={`flex flex-row w-full py-2 ${isMobileSafari ? "max-h-24" : "max-h-36"} overflow-y-auto`}>
                                         {cart.length > 0 && cart.map((cartItem) => (
-                                            <CartItem key={cartItem.id} cartItem={cartItem} />
+                                            <CartItem key={cartItem.id} cartItem={cartItem} setStuff={setStuff} />
                                         ))}
                                     </div>
                                     <div suppressHydrationWarning={true} className="border-t-2 border-gray-200 px-4 py-6 mt-8 sm:px-6">
@@ -394,7 +395,7 @@ export default function Navbar() {
                                     </div>
                                 </div>
                             ) : null}
-                            <Button className={`absolute ${isMobile ? isMobileSafari ? "bottom-14" : "bottom-10" : "bottom-7"} right-3`} onClick={() => setShowMobileMenu(false)}>
+                            <Button className={`absolute ${isMobile ? isMobileSafari ? "bottom-14" : "bottom-14" : "bottom-4"} right-5`} onClick={() => setShowMobileMenu(false)}>
                                 Close
                             </Button>
                         </div>
