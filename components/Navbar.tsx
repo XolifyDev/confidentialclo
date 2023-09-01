@@ -179,7 +179,7 @@ export default function Navbar() {
                                             <div suppressHydrationWarning={true} className="mt-8 mb-70">
                                                 <div suppressHydrationWarning={true} className="flow-root">
                                                     <ul suppressHydrationWarning={true} role="list" className="-my-6 max-h-64 overflow-y-auto">
-                                                        {cart.map(async (cartItem) => {
+                                                        {cart.length > 0 && cart.map(async (cartItem) => {
                                                             const product = await getProductById(cartItem.productId);
 
                                                             return (
@@ -371,28 +371,30 @@ export default function Navbar() {
                                 Store
                             </p>
                             <div suppressHydrationWarning={true} className="border-b-2 border-black h-2 w-[90%] ml-[3%] mb-2" />
-                            <div className="px-4 pt-3 w-[92%] max-h-[40%] rounded bg-neutral-50 mt-10 ml-2">
-                                <h1 suppressHydrationWarning={true} className='font-bold'>
-                                    Cart
-                                </h1>
-                                {/* <div className="border-b border-black h-1 w-[95%]" /> */}
-                                <div className={`flex flex-row w-full py-2 ${isMobileSafari ? "max-h-24" : "max-h-36"} overflow-y-auto`}>
-                                    {cart.map((cartItem) => (
-                                        <CartItem key={cartItem.id} cartItem={cartItem} />
-                                    ))}
-                                </div>
-                                <div suppressHydrationWarning={true} className="border-t-2 border-gray-200 px-4 py-6 mt-8 sm:px-6">
-                                    <div suppressHydrationWarning={true} className="flex justify-between text-base font-medium text-gray-900">
-                                        <p suppressHydrationWarning={true}>Subtotal</p>
-                                        <p suppressHydrationWarning={true}>${totalCost}</p>
+                            {cart.length > 0 ? (
+                                <div className="px-4 pt-3 w-[92%] max-h-[40%] rounded bg-neutral-50 mt-10 ml-2">
+                                    <h1 suppressHydrationWarning={true} className='font-bold'>
+                                        Cart
+                                    </h1>
+                                    {/* <div className="border-b border-black h-1 w-[95%]" /> */}
+                                    <div className={`flex flex-row w-full py-2 ${isMobileSafari ? "max-h-24" : "max-h-36"} overflow-y-auto`}>
+                                        {cart.length > 0 && cart.map((cartItem) => (
+                                            <CartItem key={cartItem.id} cartItem={cartItem} />
+                                        ))}
                                     </div>
-                                    {/* <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> */}
-                                    <Elements stripe={stripePromise}>
-                                        <CardForm user={userData!} />
-                                    </Elements>
+                                    <div suppressHydrationWarning={true} className="border-t-2 border-gray-200 px-4 py-6 mt-8 sm:px-6">
+                                        <div suppressHydrationWarning={true} className="flex justify-between text-base font-medium text-gray-900">
+                                            <p suppressHydrationWarning={true}>Subtotal</p>
+                                            <p suppressHydrationWarning={true}>${totalCost}</p>
+                                        </div>
+                                        {/* <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> */}
+                                        <Elements stripe={stripePromise}>
+                                            <CardForm user={userData!} />
+                                        </Elements>
+                                    </div>
                                 </div>
-                            </div>
-                            <Button className='absolute bottom-7 right-3' onClick={() => setShowMobileMenu(false)}>
+                            ) : null}
+                            <Button className={`absolute ${isMobile ? isMobileSafari ? "bottom-14" : "bottom-10" : "bottom-7"} right-3`} onClick={() => setShowMobileMenu(false)}>
                                 Close
                             </Button>
                         </div>
