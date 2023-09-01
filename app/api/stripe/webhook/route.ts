@@ -61,7 +61,7 @@ export const POST = async (req: NextApiRequest) => {
         },
       });
 
-      // console.log(dbSession, "DBSESSION");
+      console.log(dbSession, "DBSESSION");
 
       if (!dbSession) return res.json(`No Checkout session...`);
 
