@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { prisma } from "../db";
 import { CartItems } from "@/store/useGlobalStore";
 import { Orders, User } from "@prisma/client";
+import { config } from "@/config";
 
 export const findUserByEmail = async ({ email }: { email: string }) => {
   return await prisma.user.findFirst({
@@ -352,7 +353,7 @@ export const updateSessionAndSendEmail = async (sessionFromStripe: any) => {
     },
   });
 
-  let html = config1.emails.html;
+  let html = config.emails.html;
   // let html = `<html>
 
   // <head>

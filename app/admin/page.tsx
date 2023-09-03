@@ -35,7 +35,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import { createCategory, findUserByEmail, getSiteSettings, updateSiteSettings } from "@/lib/actions/dbActions";
-import { MenuIcon, Plus, Settings, ShoppingBasket, TicketIcon } from "lucide-react";
+import { MailIcon, MenuIcon, Plus, Settings, ShoppingBasket, TicketIcon } from "lucide-react";
 import Link from "next/link";
 import CategoriesTable from "./components/categories-table";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -46,6 +46,7 @@ import OrdersTable from "./components/orders-table";
 import UsersTable from "./components/users-table";
 import { User } from "@prisma/client";
 import PromosTable from "./components/promocodes-table";
+import { Textarea } from "@/components/ui/textarea";
 
 
 
@@ -61,6 +62,7 @@ export default function DashboardPage() {
     const [showDialog, setShowDialog] = useState<boolean>(false);
     const [showCateogryDialog, setShowCatDialog] = useState<boolean>(false);
     const [showPromoDialog, setShowPromoDialog] = useState<boolean>(false);
+    const [showEmailDialog, setShowEmailDialog] = useState<boolean>(false);
     const [navbarMiddleImage, setNavbarMiddleImage] = useState<string>("");
     const [mainImageHome, setMainImageHome] = useState<string>("");
     const [storeHomeImage, setMainStoreImage] = useState<string>("");
@@ -77,6 +79,11 @@ export default function DashboardPage() {
     const [promoValues, setPromoValues] = useState<{ name: string, discountPercentage: number }>({
         name: "",
         discountPercentage: 0
+    });
+    const [emailValues, setEmailvalues] = useState<{ email: string, markdown: string, subject: string }>({
+        email: "",
+        markdown: "",
+        subject: ""
     });
     const session = useSession();
     const { toast } = useToast();
@@ -194,6 +201,11 @@ export default function DashboardPage() {
                 variant: "default"
             })
         })
+    }
+
+    const emailOnSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
     }
 
     const setTab = (tab: string) => {
@@ -420,10 +432,16 @@ export default function DashboardPage() {
                                     Store
                                 </TabsTrigger>
                             </TabsList>
-                            <Button value="sitesettings" onClick={() => setShowDialog(true)} className="flex flex-row items-center gap-2">
-                                Site Settings
-                                <Pencil2Icon fontSize={25} fontWeight={600} />
-                            </Button>
+                            <div className="flex flex-row gap-2">
+                                <Button value="sitesettings" onClick={() => setShowDialog(true)} className="flex flex-row items-center gap-2">
+                                    Site Settings
+                                    <Pencil2Icon fontSize={25} fontWeight={600} />
+                                </Button>
+                                <Button value="emailer" onClick={() => setShowEmailDialog(true)} className="flex flex-row items-center gap-2">
+                                    Emailer
+                                    <MailIcon fontSize={25} fontWeight={600} />
+                                </Button>
+                            </div>
                         </div>
                         <TabsContent value="overview" className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -813,6 +831,78 @@ export default function DashboardPage() {
                                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                 )}
                                 Create</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Send an email</DialogTitle>
+                        {/* <DialogDescription>
+                            Add a new product to your store!
+                        </DialogDescription> */}
+                    </DialogHeader>
+                    <form encType="multipart/form-data" onSubmit={emailOnSubmit}>
+                        <div>
+                            <div className="space-y-4 py-2">
+                                <div className="flex flex-col space-y-2">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="mid-image">User email</Label>
+                                        <Input
+                                            disabled={loading}
+                                            required
+                                            value={emailValues.email}
+                                            onChange={(e: any) => setEmailvalues({
+                                                ...emailValues,
+                                                email: e.target.value
+                                            })}
+                                            id="mid-image" placeholder="xolify@xolify.store" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="mid-image">Email Subject</Label>
+                                        <Input
+                                            disabled={loading}
+                                            required
+                                            value={emailValues.subject}
+                                            onChange={(e: any) => setEmailvalues({
+                                                ...emailValues,
+                                                subject: e.target.value
+                                            })}
+                                            id="mid-image" placeholder="xolify@xolify.store" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="">Email Content</Label>
+                                        <Textarea
+                                            disabled={loading}
+                                            required
+                                            value={emailValues.markdown}
+                                            onChange={(e: any) => setEmailvalues({
+                                                ...emailValues,
+                                                markdown: e.target.value
+                                            })}
+                                            id="cat-desc" placeholder="Markdown" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                disabled={loading}
+                                type="button"
+                                variant="outline" onClick={() => setShowDialog(false)}>
+                                {loading && (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Cancel
+                            </Button>
+                            <Button
+                                disabled={loading}
+                                type="submit">
+                                {loading && (
+                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Send</Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>

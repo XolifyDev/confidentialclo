@@ -4,7 +4,8 @@ export const config = {
     description: "Clothing Brand",
     instagram: "https://www.instagram.com/confidentialclo/",
     tiktok: "https://www.tiktok.com/@confidentialclo",
-    domain: "https://www.confidentialclo.com",
+    domain: "http://localhost:3000",
+    // domain: "https://www.confidentialclo.com",
   },
 
   stripe: {
